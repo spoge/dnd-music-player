@@ -8,7 +8,11 @@ const url = require("url");
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 800, height: 600 });
+  mainWindow = new BrowserWindow({
+    webPreferences: { webSecurity: false },
+    width: 800,
+    height: 600
+  });
 
   mainWindow.loadURL(
     process.env.ELECTRON_START_URL ||
