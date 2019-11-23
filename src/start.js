@@ -9,10 +9,11 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    webPreferences: { webSecurity: false },
     width: 800,
-    height: 600
+    height: 600,
+    webPreferences: { webSecurity: false, nodeIntegration: true }
   });
+  //mainWindow.webContents.openDevTools();
 
   mainWindow.loadURL(
     process.env.ELECTRON_START_URL ||
