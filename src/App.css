@@ -51,9 +51,15 @@
   padding: 0 1em;
 }
 
-.player-wrapper {
+.header-wrapper {
+  padding: 1em;
+  margin-bottom: 54px;
+}
+
+.footer-wrapper {
   height: 54px;
   width: 100%;
-  position: absolute;
+  position: fixed;
   bottom: 0;
+  /* background-color: #f1f3f4; */
 }
