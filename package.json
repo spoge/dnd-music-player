@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "electron": "^7.1.2",
+    "music-metadata": "^5.0.1",
+    "music-metadata-browser": "^1.8.1",
+    "node-sass": "^4.13.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-player": "^1.14.2",
