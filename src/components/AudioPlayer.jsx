@@ -6,7 +6,6 @@ import fileUtils from "../utils/file-util";
 import * as mm from "music-metadata-browser";
 
 const AudioPlayer = () => {
-  //const [urls, setUrls] = useState([]);
   const [files, setFiles] = useState([]);
   const [currentPlaying, setCurrentPlaying] = useState("");
   const [currentUrl, setCurrentUrl] = useState("");
@@ -41,7 +40,7 @@ const AudioPlayer = () => {
   }, [isFading, nextPlaying, volume]);
 
   const openFileClick = async () => {
-    const newUrls = await fileUtils.openFiles();
+    const newUrls = await fileUtils.openAudioFiles();
     if (newUrls.length > 0) {
       const promises = newUrls.map(url =>
         mm.fetchFromUrl(url).then(metadata => ({
@@ -60,7 +59,7 @@ const AudioPlayer = () => {
   };
 
   const addToPlaylistClick = async () => {
-    const newUrls = await fileUtils.openFiles();
+    const newUrls = await fileUtils.openAudioFiles();
 
     const promises = newUrls.map(url =>
       mm.fetchFromUrl(url).then(metadata => ({
@@ -80,6 +79,29 @@ const AudioPlayer = () => {
         }, [])
       );
     });
+  };
+
+  const openPlaylist = async () => {
+    const newUrls = await fileUtils.loadPlaylist();
+    if (newUrls.length > 0) {
+      const promises = newUrls.map(url =>
+        mm.fetchFromUrl(url).then(metadata => ({
+          url: url,
+          title: metadata.common.title,
+          album: metadata.common.album,
+          artist: metadata.common.artist
+        }))
+      );
+
+      Promise.all(promises).then(songFiles => {
+        setFiles(songFiles);
+      });
+    }
+    setIsFading(false);
+  };
+
+  const savePlaylist = async () => {
+    await fileUtils.savePlaylist(files.map(file => file.url));
   };
 
   const playNextSong = url => {
@@ -138,6 +160,12 @@ const AudioPlayer = () => {
           </div>
           <div className="button-wrapper">
             <button onClick={addToPlaylistClick}>Add to playlist</button>
+          </div>
+          <div className="button-wrapper">
+            <button onClick={openPlaylist}>Open playlist</button>
+          </div>
+          <div className="button-wrapper">
+            <button onClick={savePlaylist}>Save playlist</button>
           </div>
           <div className="checkboxes-wrapper">
             <div className="checkbox-wrapper">
