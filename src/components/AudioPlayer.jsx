@@ -17,6 +17,8 @@ const AudioPlayer = () => {
   const [fadingEnabled, setFadingEnabled] = useState(true);
   const [isFading, setIsFading] = useState(false);
 
+  const [isLooping, setIsLooping] = useState(false);
+
   // Fade out current playing file, and play the next afterwards
   useEffect(() => {
     let interval = null;
@@ -118,7 +120,12 @@ const AudioPlayer = () => {
       const url = files[index + 1].url;
       playNextSong(url);
     } else {
-      stopPlayng();
+      if (isLooping) {
+        const url = files[0].url;
+        playNextSong(url);
+      } else {
+        stopPlayng();
+      }
     }
   };
 
@@ -132,15 +139,27 @@ const AudioPlayer = () => {
           <div className="button-wrapper">
             <button onClick={addToPlaylistClick}>Add to playlist</button>
           </div>
-          <div className="checkbox-wrapper">
-            <label>
-              <input
-                type="checkbox"
-                onChange={() => setFadingEnabled(!fadingEnabled)}
-                checked={fadingEnabled}
-              />
-              Fade out
-            </label>
+          <div className="checkboxes-wrapper">
+            <div className="checkbox-wrapper">
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={() => setFadingEnabled(!fadingEnabled)}
+                  checked={fadingEnabled}
+                />
+                Fade out
+              </label>
+            </div>
+            <div className="checkbox-wrapper">
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={() => setIsLooping(!isLooping)}
+                  checked={isLooping}
+                />
+                Loop
+              </label>
+            </div>
           </div>
         </div>
         <div className="song-list">
