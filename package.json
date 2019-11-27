@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "electron": "^7.1.2",
     "music-metadata": "^5.0.1",
     "music-metadata-browser": "^1.8.1",
     "node-sass": "^4.13.0",
@@ -13,7 +12,9 @@
     "react-scripts": "3.2.0"
   },
   "devDependencies": {
-    "electron-builder": "^21.2.0"
+    "electron": "^7.1.2",
+    "electron-builder": "^21.2.0",
+    "electron-packager": "^14.1.1"
   },
   "homepage": "./",
   "main": "src/start.js",
@@ -27,10 +28,11 @@
     "react-start": "react-scripts start",
     "pack": "build --dir",
     "dist": "npm run build && build",
+    "package": "electron-packager . dnd-music-player --platform=win32 --arch=x64",
     "postinstall": "install-app-deps"
   },
   "build": {
-    "appId": "com.electron.electron-with-create-react-app",
+    "appId": "no.sboge.dnd-music-player",
     "win": {
       "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
     },
