@@ -1,0 +1,21 @@
+@import "../App.css";
+
+.playlist-view {
+  background-color: #282c34;
+  min-height: 100vh;
+  width: 100%;
+  font-size: calc(8px + 2vmin);
+  color: white;
+
+  .playlist-wrapper {
+    padding: 1em;
+    margin-bottom: 54px;
+  }
+
+  .player-wrapper {
+    height: 54px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+  }
+}

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
-import "./AudioPlayer.scss";
+import "./PlaylistView.scss";
 import fileUtils from "../utils/file-util";
 
 import * as mm from "music-metadata-browser";
+import PlaylistInputRow from "./PlaylistInputRow";
+import PlaylistList from "./PlaylistList";
 
-const AudioPlayer = () => {
+const PlaylistView = () => {
   const [files, setFiles] = useState([]);
   const [currentPlaying, setCurrentPlaying] = useState("");
   const [currentUrl, setCurrentUrl] = useState("");
@@ -16,7 +18,8 @@ const AudioPlayer = () => {
   const [fadingEnabled, setFadingEnabled] = useState(true);
   const [isFading, setIsFading] = useState(false);
 
-  const [isLooping, setIsLooping] = useState(false);
+  const [isListLooping, setIsListLooping] = useState(true);
+  const [isSongLooping, setIsSongLooping] = useState(false);
 
   // Fade out current playing file, and play the next afterwards
   useEffect(() => {
@@ -142,7 +145,7 @@ const AudioPlayer = () => {
       const url = files[index + 1].url;
       playNextSong(url);
     } else {
-      if (isLooping) {
+      if (isListLooping) {
         const url = files[0].url;
         playNextSong(url);
       } else {
@@ -151,60 +154,34 @@ const AudioPlayer = () => {
     }
   };
 
+  const changeFading = () => {
+    setFadingEnabled(!fadingEnabled);
+  };
+
+  const changeListLoop = () => {
+    setIsListLooping(!isListLooping);
+  };
+
+  const changeSongLoop = () => {
+    setIsSongLooping(!isSongLooping);
+  };
+
   return (
-    <div className="audio-player">
+    <div className="playlist-view">
       <div className="playlist-wrapper">
-        <div className="playlist-input-wrapper">
-          <div className="button-wrapper">
-            <button onClick={openFileClick}>New playlist</button>
-          </div>
-          <div className="button-wrapper">
-            <button onClick={addToPlaylistClick}>Add to playlist</button>
-          </div>
-          <div className="button-wrapper">
-            <button onClick={openPlaylist}>Open playlist</button>
-          </div>
-          <div className="button-wrapper">
-            <button onClick={savePlaylist}>Save playlist</button>
-          </div>
-          <div className="checkboxes-wrapper">
-            <div className="checkbox-wrapper">
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => setFadingEnabled(!fadingEnabled)}
-                  checked={fadingEnabled}
-                />
-                Fade out
-              </label>
-            </div>
-            <div className="checkbox-wrapper">
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => setIsLooping(!isLooping)}
-                  checked={isLooping}
-                />
-                Loop
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className="song-list">
-          {files.map(file => {
-            return (
-              <div
-                className={`song-wrapper ${
-                  currentUrl === file.url ? "current-song" : ""
-                }`}
-                key={file.url}
-                onClick={() => play(file.url)}
-              >
-                <p>{file.title}</p>
-              </div>
-            );
-          })}
-        </div>
+        <PlaylistInputRow
+          openFileClick={openFileClick}
+          addToPlaylistClick={addToPlaylistClick}
+          openPlaylist={openPlaylist}
+          savePlaylist={savePlaylist}
+          changeFading={changeFading}
+          isFading={fadingEnabled}
+          changeListLoop={changeListLoop}
+          isListLooping={isListLooping}
+          changeSongLoop={changeSongLoop}
+          isSongLooping={isSongLooping}
+        />
+        <PlaylistList files={files} play={play} currentUrl={currentUrl} />
       </div>
 
       <div className="player-wrapper">
@@ -218,6 +195,7 @@ const AudioPlayer = () => {
           onEnded={nextSong}
           controls
           playing={playing}
+          loop={isSongLooping}
           volume={volume}
           url={currentPlaying}
           width="100%"
@@ -228,4 +206,4 @@ const AudioPlayer = () => {
   );
 };
 
-export default AudioPlayer;
+export default PlaylistView;

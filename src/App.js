@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.css";
 
-import AudioPlayer from "./components/AudioPlayer";
+import PlaylistView from "./components/PlaylistView";
 
 const App = () => {
   return (
     <div className="App">
-      <AudioPlayer />
+      <PlaylistView />
     </div>
   );
 };

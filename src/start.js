@@ -11,9 +11,11 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    minHeight: 300,
+    minWidth: 300,
     webPreferences: { webSecurity: false, nodeIntegration: true }
   });
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   mainWindow.loadURL(
     process.env.ELECTRON_START_URL ||
