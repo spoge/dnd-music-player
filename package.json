@@ -1,9 +1,13 @@
 {
   "name": "dnd-music-player",
+  "description": "A music player made specifically for D&D",
+  "author": "Sondre S Boge <sondreboge@hotmail.com> (http://sboge.no/)",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
+  "main": "src/start.js",
   "dependencies": {
-    "music-metadata": "^5.0.1",
+    "electron-is-dev": "^1.1.0",
     "music-metadata-browser": "^1.8.1",
     "node-sass": "^4.13.0",
     "react": "^16.12.0",
@@ -12,12 +16,12 @@
     "react-scripts": "3.2.0"
   },
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "electron": "^7.1.2",
     "electron-builder": "^21.2.0",
-    "electron-packager": "^14.1.1"
+    "electron-reload": "^1.5.0",
+    "nodemon": "^2.0.1"
   },
-  "homepage": "./",
-  "main": "src/start.js",
   "scripts": {
     "start": "nf start -p 3000",
     "build": "react-scripts build",
@@ -26,20 +30,19 @@
     "electron": "electron .",
     "electron-start": "node src/start-react",
     "react-start": "react-scripts start",
-    "pack": "build --dir",
-    "dist": "npm run build && build",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
     "package": "electron-packager . dnd-music-player --platform=win32 --arch=x64",
-    "postinstall": "install-app-deps"
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
+    "asar": true,
     "appId": "no.sboge.dnd-music-player",
     "win": {
-      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
-    },
-    "directories": {
-      "buildResources": "public"
+      "target": "nsis"
     }
   },
+  "extends": null,
   "eslintConfig": {
     "extends": "react-app"
   },
