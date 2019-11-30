@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Store } from "../Store.js";
 import "./PlaylistInputRow.scss";
 
 const PlaylistInputRow = ({
   openFileClick,
   addToPlaylistClick,
   openPlaylist,
-  savePlaylist,
-  changeFading,
-  isFading,
-  changeListLoop,
-  isListLooping,
-  changeSongLoop,
-  isSongLooping
+  savePlaylist
 }) => {
+  const globalState = useContext(Store);
+  const { dispatch, state } = globalState;
+
   return (
     <div className="playlist-inputs-wrapper">
+      <div className="playlist-input">
+        <button
+          onClick={() => dispatch({ type: "ADD_PLAYLIST", payload: "123" })}
+        >
+          Dispatch test
+        </button>
+      </div>
       <div className="playlist-input">
         <button onClick={openFileClick}>New playlist</button>
       </div>
@@ -30,7 +35,16 @@ const PlaylistInputRow = ({
       <div className="playlist-input checkboxes-wrapper">
         <div className="checkbox-wrapper">
           <label>
-            <input type="checkbox" onChange={changeFading} checked={isFading} />
+            <input
+              type="checkbox"
+              onChange={() =>
+                dispatch({
+                  type: "TOGGLE_FADING_ENABLED",
+                  payload: !state.isFadingEnabled
+                })
+              }
+              checked={state.isFadingEnabled}
+            />
             Fade out
           </label>
         </div>
@@ -38,8 +52,13 @@ const PlaylistInputRow = ({
           <label>
             <input
               type="checkbox"
-              onChange={changeListLoop}
-              checked={isListLooping}
+              onChange={() =>
+                dispatch({
+                  type: "TOGGLE_LOOPING_PLAYLIST_ENABLED",
+                  payload: !state.isPlaylistLooping
+                })
+              }
+              checked={state.isPlaylistLooping}
             />
             Repeat playlist
           </label>
@@ -48,8 +67,13 @@ const PlaylistInputRow = ({
           <label>
             <input
               type="checkbox"
-              onChange={changeSongLoop}
-              checked={isSongLooping}
+              onChange={() =>
+                dispatch({
+                  type: "TOGGLE_LOOPING_TRACK_ENABLED",
+                  payload: !state.isTrackLooping
+                })
+              }
+              checked={state.isTrackLooping}
             />
             Repeat song
           </label>

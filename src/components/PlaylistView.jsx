@@ -1,46 +1,83 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ReactPlayer from "react-player";
 import "./PlaylistView.scss";
 import fileUtils from "../utils/file-util";
+import { Store } from "../Store.js";
 
 import * as mm from "music-metadata-browser";
 import PlaylistInputRow from "./PlaylistInputRow";
 import PlaylistList from "./PlaylistList";
 
 const PlaylistView = () => {
-  const [files, setFiles] = useState([]);
-  const [currentPlaying, setCurrentPlaying] = useState("");
-  const [currentUrl, setCurrentUrl] = useState("");
-  const [nextPlaying, setNextPlaying] = useState("");
-  const [playing, setPlaying] = useState(false);
-  const [volume, setVolume] = useState(1);
+  const globalState = useContext(Store);
+  const { state, dispatch } = globalState;
 
-  const [fadingEnabled, setFadingEnabled] = useState(true);
-  const [isFading, setIsFading] = useState(false);
+  //  const [isFading, setIsFading] = useState(false);
 
-  const [isListLooping, setIsListLooping] = useState(true);
-  const [isSongLooping, setIsSongLooping] = useState(false);
+  const dispatchNextTrack = url => {
+    dispatch({
+      type: "NEXT_TRACK"
+    });
+  };
 
+  const dispatchStartPlaying = url => {
+    dispatch({ type: "START_PLAYING" });
+  };
+
+  const dispatchStopPlaying = url => {
+    dispatch({ type: "STOP_PLAYING" });
+  };
+
+  const dispatchSetTracksForPlaylist = tracks => {
+    dispatch({
+      type: "SET_TRACKS_TO_CURRENT_PLAYLIST",
+      payload: tracks
+    });
+  };
+
+  const dispatchAddTracksForPlaylist = tracks => {
+    dispatch({
+      type: "ADD_TRACKS_TO_CURRENT_PLAYLIST",
+      payload: tracks
+    });
+  };
+
+  /*
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const dispatchVolume = volume => {
+    dispatch({ type: "SET_VOLUME", payload: volume });
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const dispatchPlayNextTrackInQueue = () => {
+    dispatch({
+      type: "PLAY_NEXT_TRACK_IN_QUEUE"
+    });
+  };
+
+  
+  // TODO: fix this
   // Fade out current playing file, and play the next afterwards
   useEffect(() => {
     let interval = null;
     if (isFading) {
       interval = setInterval(() => {
-        if (volume - 0.02 > 0) {
-          setVolume(volume - 0.02);
+        const volume = state.volume - 0.02;
+        if (volume >= 0) {
+          dispatchVolume(volume);
         } else {
           setIsFading(false);
-          setVolume(1);
-          setCurrentPlaying(nextPlaying);
-          setNextPlaying("");
-          setPlaying(true);
+          dispatchPlayNextTrackInQueue();
         }
       }, 10);
     } else if (!isFading) {
       clearInterval(interval);
     }
-    return () => clearInterval(interval);
-  }, [isFading, nextPlaying, volume]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [dispatchPlayNextTrackInQueue, dispatchVolume, isFading, state.volume]);
+*/
 
   const openFileClick = async () => {
     const newUrls = await fileUtils.openAudioFiles();
@@ -55,10 +92,10 @@ const PlaylistView = () => {
       );
 
       Promise.all(promises).then(songFiles => {
-        setFiles(songFiles);
+        dispatchSetTracksForPlaylist(songFiles);
       });
     }
-    setIsFading(false);
+    //setIsFading(false);
   };
 
   const addToPlaylistClick = async () => {
@@ -74,13 +111,15 @@ const PlaylistView = () => {
     );
 
     Promise.all(promises).then(songFiles => {
-      setFiles(
-        [...files, ...songFiles].reduce((unique, item) => {
+      const newFiles = [...state.currentPlaylistTracks, ...songFiles].reduce(
+        (unique, item) => {
           return unique.filter(u => u.url === item.url).length > 0
             ? unique
             : [...unique, item];
-        }, [])
+        },
+        []
       );
+      dispatchAddTracksForPlaylist(newFiles);
     });
   };
 
@@ -97,73 +136,16 @@ const PlaylistView = () => {
       );
 
       Promise.all(promises).then(songFiles => {
-        setFiles(songFiles);
+        dispatchSetTracksForPlaylist(songFiles);
       });
     }
-    setIsFading(false);
+    //setIsFading(false);
   };
 
   const savePlaylist = async () => {
-    await fileUtils.savePlaylist(files.map(file => file.url));
-  };
-
-  const playNextSong = url => {
-    setNextPlaying("");
-    setCurrentUrl(url);
-    setCurrentPlaying([{ src: url }]);
-    setPlaying(true);
-  };
-
-  const playNextSongWithFading = url => {
-    setNextPlaying([{ src: url }]);
-    setIsFading(true);
-    setCurrentUrl(url);
-  };
-
-  const stopPlayng = () => {
-    setCurrentUrl("");
-    setCurrentPlaying("");
-    setPlaying(false);
-  };
-
-  const play = url => {
-    // check if already playing & if current playing is same as next playing
-    if (
-      currentPlaying !== "" &&
-      currentPlaying[0].src !== url &&
-      fadingEnabled
-    ) {
-      playNextSongWithFading(url);
-    } else {
-      playNextSong(url);
-    }
-  };
-
-  const nextSong = () => {
-    const index = files.findIndex(file => file.url === currentUrl);
-    if (index + 1 < files.length) {
-      const url = files[index + 1].url;
-      playNextSong(url);
-    } else {
-      if (isListLooping) {
-        const url = files[0].url;
-        playNextSong(url);
-      } else {
-        stopPlayng();
-      }
-    }
-  };
-
-  const changeFading = () => {
-    setFadingEnabled(!fadingEnabled);
-  };
-
-  const changeListLoop = () => {
-    setIsListLooping(!isListLooping);
-  };
-
-  const changeSongLoop = () => {
-    setIsSongLooping(!isSongLooping);
+    await fileUtils.savePlaylist(
+      state.currentPlaylistTracks.map(file => file.url)
+    );
   };
 
   return (
@@ -174,14 +156,8 @@ const PlaylistView = () => {
           addToPlaylistClick={addToPlaylistClick}
           openPlaylist={openPlaylist}
           savePlaylist={savePlaylist}
-          changeFading={changeFading}
-          isFading={fadingEnabled}
-          changeListLoop={changeListLoop}
-          isListLooping={isListLooping}
-          changeSongLoop={changeSongLoop}
-          isSongLooping={isSongLooping}
         />
-        <PlaylistList files={files} play={play} currentUrl={currentUrl} />
+        <PlaylistList startFading={() => {}} />
       </div>
 
       <div className="player-wrapper">
@@ -192,12 +168,12 @@ const PlaylistView = () => {
               forceAudio: true
             }
           }}
-          onEnded={nextSong}
+          onEnded={dispatchNextTrack}
           controls
-          playing={playing}
-          loop={isSongLooping}
-          volume={volume}
-          url={currentPlaying}
+          playing={state.isPlaying}
+          loop={state.isTrackLooping}
+          volume={state.volume}
+          url={state.currentTrackUrl}
           width="100%"
           height="100%"
         />
