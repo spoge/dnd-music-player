@@ -1,4 +1,4 @@
-# D&D Music Player
+# D&D Music Player (WIP)
 
 This project was bootstrapped with [React Electron](https://github.com/willjw3/react-electron) by [willjw3](https://github.com/willjw3).
 
