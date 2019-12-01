@@ -5,6 +5,7 @@
   "author": "spoge",
   "build": {
     "appId": "no.sboge.dnd-music-player",
+    "productName": "D&D Music Player",
     "win": {
       "icon": "build/icon.png"
     }

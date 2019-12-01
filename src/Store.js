@@ -4,7 +4,10 @@ export const Store = React.createContext();
 
 const initialState = {
   playlists: [],
-  currentPlaylistTracks: [],
+  currentPlaylist: {
+    name: "",
+    tracks: []
+  },
   currentTrackIndex: 0,
   currentTrackUrl: "",
   nextTrackUrl: "",
@@ -39,37 +42,46 @@ const StoreProvider = props => {
         return { ...state, nextTrackUrl: action.payload };
       case "SET_VOLUME":
         return { ...state, volume: action.payload };
-      case "SET_TRACKS_TO_CURRENT_PLAYLIST":
-        return {
-          ...state,
-          currentPlaylistTracks: [...action.payload]
+      case "SET_CURRENT_PLAYLIST":
+        const newPlaylist = {
+          name: action.payload.name,
+          tracks: [...action.payload.tracks]
         };
-      case "ADD_TRACKS_TO_CURRENT_PLAYLIST":
+
         return {
           ...state,
-          currentPlaylistTracks: [...action.payload]
+          playlists: [...state.playlists, newPlaylist],
+          currentPlaylist: newPlaylist,
+          currentIndex: 0,
+          currentUrl: newPlaylist.tracks[0]
+        };
+      case "SET_TRACKS_FOR_CURRENT_PLAYLIST":
+        return {
+          ...state,
+          currentPlaylist: {
+            name: state.currentPlaylist,
+            tracks: [...action.payload]
+          }
         };
       case "SET_CURRENT_TRACK_INDEX":
-        const trackUrl = state.currentPlaylistTracks[action.payload];
         return {
           ...state,
           currentTrackIndex: action.payload,
-          currentTrackUrl: trackUrl
+          currentTrackUrl: state.currentPlaylist.tracks[action.payload]
         };
       case "SET_CURRENT_TRACK_URL":
-        const trackIndex = state.currentPlaylistTracks
-          .map(track => track.url)
-          .indexOf(action.payload);
         return {
           ...state,
           currentTrackUrl: action.payload,
-          currentTrackIndex: trackIndex
+          currentTrackIndex: state.currentPlaylist.tracks
+            .map(track => track.url)
+            .indexOf(action.payload)
         };
       case "PLAY_NEXT_TRACK_IN_QUEUE":
         return {
           ...state,
           volume: 1,
-          currentTrackIndex: state.currentPlaylistTracks
+          currentTrackIndex: state.currentPlaylist.tracks
             .map(track => track.url)
             .indexOf(action.payload),
           currentTrackUrl: state.nextTrackUrl,
@@ -80,12 +92,12 @@ const StoreProvider = props => {
         let nextIndex = state.currentTrackIndex;
         let nextUrl = state.currentTrackUrl;
         let isPlaying = state.isPlaying;
-        if (state.currentTrackIndex + 1 < state.currentPlaylistTracks.length) {
+        if (state.currentTrackIndex + 1 < state.currentPlaylist.tracks.length) {
           nextIndex = state.currentTrackIndex + 1;
-          nextUrl = state.currentPlaylistTracks[nextIndex].url;
+          nextUrl = state.currentPlaylist.tracks[nextIndex].url;
         } else if (state.isPlaylistLooping) {
           nextIndex = 0;
-          nextUrl = state.currentPlaylistTracks[nextIndex].url;
+          nextUrl = state.currentPlaylist.tracks[nextIndex].url;
         } else {
           isPlaying = false;
         }
@@ -101,7 +113,7 @@ const StoreProvider = props => {
           state.currentTrackIndex - 1 >= 0
             ? state.currentTrackIndex - 1
             : state.isPlaylistLooping
-            ? state.currentPlaylistTracks.length - 1
+            ? state.currentPlaylist.tracks.length - 1
             : -1;
         return { ...state, currentTrackIndex: previousIndex };
       default:

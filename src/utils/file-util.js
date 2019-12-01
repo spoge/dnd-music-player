@@ -28,6 +28,17 @@ const fileUtils = {
 
     await remote.dialog.showSaveDialog(options).then(result => {
       if (!result.canceled) {
+        const fileName = result.filePath
+          .split("\\")
+          .pop()
+          .split("/")
+          .pop()
+          .split(".")[0];
+
+        if (content.name === "") {
+          content.name = fileName;
+        }
+
         fs.writeFileSync(result.filePath, JSON.stringify(content), "utf-8");
       }
     });
@@ -44,7 +55,7 @@ const fileUtils = {
       })
       .then(files => {
         if (!files || files.canceled || files.filePaths === 0) {
-          return [];
+          return { name: "", urls: [] };
         }
         return files;
       })
@@ -54,7 +65,7 @@ const fileUtils = {
         }
       });
 
-    return result ? result : [];
+    return result ? result : { name: "", urls: [] };
   }
 };
 

@@ -9,7 +9,7 @@ const PlaylistList = ({ startFading }) => {
 
   return (
     <div className="song-list">
-      {state.currentPlaylistTracks.length > 0 ? (
+      {state.currentPlaylist.tracks.length > 0 ? (
         <div className="song-wrapper">
           <div className="song-item song-item-1-2">
             <h3>TITLE</h3>
@@ -22,7 +22,7 @@ const PlaylistList = ({ startFading }) => {
           </div>
         </div>
       ) : null}
-      {state.currentPlaylistTracks.map(track => {
+      {state.currentPlaylist.tracks.map(track => {
         return (
           <div
             className={`song-wrapper ${

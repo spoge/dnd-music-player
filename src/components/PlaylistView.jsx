@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import ReactPlayer from "react-player";
 import "./PlaylistView.scss";
 import fileUtils from "../utils/file-util";
@@ -20,25 +20,26 @@ const PlaylistView = () => {
     });
   };
 
+  /*
   const dispatchStartPlaying = url => {
     dispatch({ type: "START_PLAYING" });
   };
 
   const dispatchStopPlaying = url => {
     dispatch({ type: "STOP_PLAYING" });
-  };
+  };*/
 
   const dispatchSetTracksForPlaylist = tracks => {
     dispatch({
-      type: "SET_TRACKS_TO_CURRENT_PLAYLIST",
+      type: "SET_TRACKS_FOR_CURRENT_PLAYLIST",
       payload: tracks
     });
   };
 
-  const dispatchAddTracksForPlaylist = tracks => {
+  const dispatchSetCurrentPlaylist = playlist => {
     dispatch({
-      type: "ADD_TRACKS_TO_CURRENT_PLAYLIST",
-      payload: tracks
+      type: "SET_CURRENT_PLAYLIST",
+      payload: playlist
     });
   };
 
@@ -91,17 +92,17 @@ const PlaylistView = () => {
         }))
       );
 
-      Promise.all(promises).then(songFiles => {
-        dispatchSetTracksForPlaylist(songFiles);
+      Promise.all(promises).then(tracks => {
+        dispatchSetTracksForPlaylist(tracks);
       });
     }
     //setIsFading(false);
   };
 
   const addToPlaylistClick = async () => {
-    const newUrls = await fileUtils.openAudioFiles();
+    const newTracks = await fileUtils.openAudioFiles();
 
-    const promises = newUrls.map(url =>
+    const promises = newTracks.map(url =>
       mm.fetchFromUrl(url).then(metadata => ({
         url: url,
         title: metadata.common.title,
@@ -110,8 +111,8 @@ const PlaylistView = () => {
       }))
     );
 
-    Promise.all(promises).then(songFiles => {
-      const newFiles = [...state.currentPlaylistTracks, ...songFiles].reduce(
+    Promise.all(promises).then(tracks => {
+      const newTracks = [...state.currentPlaylist.tracks, ...tracks].reduce(
         (unique, item) => {
           return unique.filter(u => u.url === item.url).length > 0
             ? unique
@@ -119,14 +120,14 @@ const PlaylistView = () => {
         },
         []
       );
-      dispatchAddTracksForPlaylist(newFiles);
+      dispatchSetTracksForPlaylist(newTracks);
     });
   };
 
   const openPlaylist = async () => {
-    const newUrls = await fileUtils.loadPlaylist();
-    if (newUrls.length > 0) {
-      const promises = newUrls.map(url =>
+    const newPlaylist = await fileUtils.loadPlaylist();
+    if (newPlaylist.urls.length > 0) {
+      const promises = newPlaylist.urls.map(url =>
         mm.fetchFromUrl(url).then(metadata => ({
           url: url,
           title: metadata.common.title,
@@ -135,17 +136,21 @@ const PlaylistView = () => {
         }))
       );
 
-      Promise.all(promises).then(songFiles => {
-        dispatchSetTracksForPlaylist(songFiles);
+      Promise.all(promises).then(tracks => {
+        console.log(tracks);
+        dispatchSetCurrentPlaylist({ name: newPlaylist.name, tracks: tracks });
       });
     }
     //setIsFading(false);
   };
 
   const savePlaylist = async () => {
-    await fileUtils.savePlaylist(
-      state.currentPlaylistTracks.map(file => file.url)
-    );
+    if (state.currentPlaylist.tracks.length > 0) {
+      await fileUtils.savePlaylist({
+        name: "",
+        urls: state.currentPlaylist.tracks.map(track => track.url)
+      });
+    }
   };
 
   return (

@@ -14,13 +14,6 @@ const PlaylistInputRow = ({
   return (
     <div className="playlist-inputs-wrapper">
       <div className="playlist-input">
-        <button
-          onClick={() => dispatch({ type: "ADD_PLAYLIST", payload: "123" })}
-        >
-          Dispatch test
-        </button>
-      </div>
-      <div className="playlist-input">
         <button onClick={openFileClick}>New playlist</button>
       </div>
       <div className="playlist-input">

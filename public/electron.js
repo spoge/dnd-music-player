@@ -1,10 +1,12 @@
 const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const Menu = electron.Menu;
 const path = require("path");
 const isDev = require("electron-is-dev");
 
 let mainWindow;
+Menu.setApplicationMenu(null);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -15,8 +17,6 @@ function createWindow() {
     minWidth: 300,
     webPreferences: { webSecurity: false, nodeIntegration: true }
   });
-
-  mainWindow.setMenuBarVisibility(false);
 
   mainWindow.loadURL(
     isDev
