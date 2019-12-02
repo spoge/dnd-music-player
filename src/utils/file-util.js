@@ -26,7 +26,7 @@ const fileUtils = {
       filters: [{ name: "json", extensions: ["json"] }]
     };
 
-    await remote.dialog.showSaveDialog(options).then(result => {
+    return await remote.dialog.showSaveDialog(options).then(result => {
       if (!result.canceled) {
         const fileName = result.filePath
           .split("\\")
@@ -38,8 +38,10 @@ const fileUtils = {
         if (content.name === "") {
           content.name = fileName;
         }
-
         fs.writeFileSync(result.filePath, JSON.stringify(content), "utf-8");
+        return content;
+      } else {
+        return { name: "", urls: [] };
       }
     });
   },

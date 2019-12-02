@@ -3,7 +3,7 @@ import "./PlaylistList.scss";
 
 import { Store } from "../Store.js";
 
-const PlaylistList = ({ startFading }) => {
+const PlaylistList = () => {
   const globalState = useContext(Store);
   const { dispatch, state } = globalState;
 
@@ -30,16 +30,7 @@ const PlaylistList = ({ startFading }) => {
             }`}
             key={track.url}
             onClick={() => {
-              /*if (state.isFadingEnabled && state.isPlaying) {
-                dispatch({
-                  type: "SET_NEXT_TRACK_URL",
-                  payload: track.url
-                });
-                startFading();
-              } else {*/
-              dispatch({ type: "SET_CURRENT_TRACK_URL", payload: track.url });
-              dispatch({ type: "START_PLAYING" });
-              //}
+              dispatch({ type: "PLAY_SELECTED_TRACK", payload: track.url });
             }}
           >
             <div className="song-item song-item-1-2">

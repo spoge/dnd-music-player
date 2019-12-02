@@ -12,8 +12,6 @@ const initialState = {
   currentTrackUrl: "",
   nextTrackUrl: "",
   isPlaying: false,
-  isFading: false,
-  isFadingEnabled: true,
   isPlaylistLooping: true,
   isTrackLooping: false,
   volume: 1
@@ -28,30 +26,46 @@ const StoreProvider = props => {
         return { ...state, isPlaying: true };
       case "STOP_PLAYING":
         return { ...state, isPlaying: false };
-      case "START_FADING":
-        return { ...state, isFading: true };
-      case "STOP_FADING":
-        return { ...state, isFading: false };
-      case "TOGGLE_FADING_ENABLED":
-        return { ...state, isFadingEnabled: action.payload };
       case "TOGGLE_LOOPING_PLAYLIST_ENABLED":
         return { ...state, isPlaylistLooping: action.payload };
       case "TOGGLE_LOOPING_TRACK_ENABLED":
         return { ...state, isTrackLooping: action.payload };
-      case "SET_NEXT_TRACK_URL":
-        return { ...state, nextTrackUrl: action.payload };
-      case "SET_VOLUME":
-        return { ...state, volume: action.payload };
-      case "SET_CURRENT_PLAYLIST":
+      case "SELECT_CURRENT_PLAYLIST":
+        return {
+          ...state,
+          currentPlaylist: state.playlists[action.payload],
+          currentIndex: 0,
+          currentUrl: state.playlists[action.payload].tracks[0]
+        };
+      case "LOAD_PLAYLIST":
         const newPlaylist = {
           name: action.payload.name,
           tracks: [...action.payload.tracks]
         };
 
+        let duplicatePlaylistIndex = state.playlists
+          .map(playlist => playlist.name)
+          .indexOf(newPlaylist.name);
+
         return {
           ...state,
-          playlists: [...state.playlists, newPlaylist],
-          currentPlaylist: newPlaylist,
+          playlists:
+            // Add new playlist to playlists, if its name doesn't appear there already.
+            // But if it already exists, replace tracks of that playlist.
+            duplicatePlaylistIndex !== -1
+              ? state.playlists.map((playlist, index) =>
+                  index === duplicatePlaylistIndex
+                    ? {
+                        name: playlist.name,
+                        tracks: [...newPlaylist.tracks]
+                      }
+                    : playlist
+                )
+              : [...state.playlists, newPlaylist],
+          currentPlaylist: {
+            name: action.payload.name,
+            tracks: [...action.payload.tracks]
+          },
           currentIndex: 0,
           currentUrl: newPlaylist.tracks[0]
         };
@@ -63,29 +77,13 @@ const StoreProvider = props => {
             tracks: [...action.payload]
           }
         };
-      case "SET_CURRENT_TRACK_INDEX":
-        return {
-          ...state,
-          currentTrackIndex: action.payload,
-          currentTrackUrl: state.currentPlaylist.tracks[action.payload]
-        };
-      case "SET_CURRENT_TRACK_URL":
+      case "PLAY_SELECTED_TRACK":
         return {
           ...state,
           currentTrackUrl: action.payload,
           currentTrackIndex: state.currentPlaylist.tracks
             .map(track => track.url)
-            .indexOf(action.payload)
-        };
-      case "PLAY_NEXT_TRACK_IN_QUEUE":
-        return {
-          ...state,
-          volume: 1,
-          currentTrackIndex: state.currentPlaylist.tracks
-            .map(track => track.url)
             .indexOf(action.payload),
-          currentTrackUrl: state.nextTrackUrl,
-          nextTrackUrl: "",
           isPlaying: true
         };
       case "NEXT_TRACK":
