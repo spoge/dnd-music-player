@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./App.css";
 
 import PlaylistView from "./components/PlaylistView";
 
-import { Store } from "./Store.js";
+// import { Store } from "./Store.js";
 
 function App() {
-  const globalState = useContext(Store);
-  const { state } = globalState;
+  // const globalState = React.useContext(Store);
+  // const { state } = globalState;
 
-  console.log(state);
+  // console.log(state);
 
   return (
     <div className="App">
