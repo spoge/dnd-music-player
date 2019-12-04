@@ -1,0 +1,55 @@
+@import "../App.css";
+
+.track-list {
+  display: flex;
+  flex-direction: column;
+  .track-wrapper {
+    font-size: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+
+    .track-item {
+      align-self: center;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-item-1-2 {
+      width: 50%;
+    }
+    .track-item-1-4 {
+      width: 25%;
+    }
+    h3 {
+      //padding: 0.2em 0.5em;
+      margin: 0.1em 0.4em;
+
+      // make text unselecteble
+      -webkit-user-select: none; /* Safari */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE10+/Edge */
+      user-select: none; /* Standard */
+    }
+    p {
+      font-weight: bold;
+      //padding: 0.2em 0.5em;
+      margin: 0.2em 0.5em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      // make text unselecteble
+      -webkit-user-select: none; /* Safari */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE10+/Edge */
+      user-select: none; /* Standard */
+    }
+  }
+  .current-track {
+    color: red;
+  }
+}

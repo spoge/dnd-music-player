@@ -20,7 +20,7 @@ const fileUtils = {
   async savePlaylist(content) {
     let options = {
       title: "Save playlist",
-      defaultPath: "my_playlist",
+      defaultPath: content.name ? content.name : "New playlist",
       buttonLabel: "Save",
 
       filters: [{ name: "json", extensions: ["json"] }]

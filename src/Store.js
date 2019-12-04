@@ -8,7 +8,6 @@ const initialState = {
     name: "",
     tracks: []
   },
-  currentTrackIndex: 0,
   currentTrackUrl: "",
   nextTrackUrl: "",
   isPlaying: false,
@@ -37,15 +36,37 @@ const StoreProvider = props => {
           currentIndex: 0,
           currentUrl: state.playlists[action.payload].tracks[0]
         };
-      case "LOAD_PLAYLIST":
+      case "PLAY_SELECTED_PLAYLIST":
+        const selectedPlaylistIndex = state.playlists
+          .map(playlist => playlist.name)
+          .indexOf(action.payload);
+
+        return {
+          ...state,
+          currentPlaylist: state.playlists[selectedPlaylistIndex]
+        };
+
+      case "NEW_PLAYLIST":
         const newPlaylist = {
+          name: `New playlist ${state.playlists.length + 1}`,
+          tracks: action.payload
+        };
+
+        return {
+          ...state,
+          playlists: [...state.playlists, newPlaylist],
+          currentPlaylist: newPlaylist
+        };
+
+      case "LOAD_PLAYLIST":
+        const loadedPlaylist = {
           name: action.payload.name,
           tracks: [...action.payload.tracks]
         };
 
         let duplicatePlaylistIndex = state.playlists
           .map(playlist => playlist.name)
-          .indexOf(newPlaylist.name);
+          .indexOf(loadedPlaylist.name);
 
         return {
           ...state,
@@ -57,23 +78,23 @@ const StoreProvider = props => {
                   index === duplicatePlaylistIndex
                     ? {
                         name: playlist.name,
-                        tracks: [...newPlaylist.tracks]
+                        tracks: [...loadedPlaylist.tracks]
                       }
                     : playlist
                 )
-              : [...state.playlists, newPlaylist],
+              : [...state.playlists, loadedPlaylist],
           currentPlaylist: {
             name: action.payload.name,
             tracks: [...action.payload.tracks]
           },
           currentIndex: 0,
-          currentUrl: newPlaylist.tracks[0]
+          currentUrl: loadedPlaylist.tracks[0]
         };
       case "SET_TRACKS_FOR_CURRENT_PLAYLIST":
         return {
           ...state,
           currentPlaylist: {
-            name: state.currentPlaylist,
+            name: state.currentPlaylist.name,
             tracks: [...action.payload]
           }
         };
@@ -81,39 +102,40 @@ const StoreProvider = props => {
         return {
           ...state,
           currentTrackUrl: action.payload,
-          currentTrackIndex: state.currentPlaylist.tracks
-            .map(track => track.url)
-            .indexOf(action.payload),
           isPlaying: true
         };
       case "NEXT_TRACK":
-        let nextIndex = state.currentTrackIndex;
+        let nextIndex = state.currentPlaylist.tracks
+          .map(track => track.url)
+          .indexOf(state.currentTrackUrl);
         let nextUrl = state.currentTrackUrl;
         let isPlaying = state.isPlaying;
-        if (state.currentTrackIndex + 1 < state.currentPlaylist.tracks.length) {
-          nextIndex = state.currentTrackIndex + 1;
-          nextUrl = state.currentPlaylist.tracks[nextIndex].url;
-        } else if (state.isPlaylistLooping) {
-          nextIndex = 0;
-          nextUrl = state.currentPlaylist.tracks[nextIndex].url;
+
+        // next song exists
+        if (nextIndex + 1 < state.currentPlaylist.tracks.length) {
+          // selected playlist contains current track
+          if (
+            state.currentPlaylist.tracks
+              .map(tracks => tracks.url)
+              .filter(url => state.currentTrackUrl === url).length > 0
+          ) {
+            nextUrl = state.currentPlaylist.tracks[nextIndex + 1].url;
+          } // selected playlist doesn't contain current track, i.e. viewing another playlist
+          else {
+            nextUrl = state.currentPlaylist.tracks[0].url;
+          }
+        } // last song, loop if isPlaylistLooping is set
+        else if (state.isPlaylistLooping) {
+          nextUrl = state.currentPlaylist.tracks[0].url;
         } else {
           isPlaying = false;
         }
 
         return {
           ...state,
-          currentTrackIndex: nextIndex,
           currentTrackUrl: nextUrl,
           isPlaying
         };
-      case "PREVIOUS_TRACK":
-        const previousIndex =
-          state.currentTrackIndex - 1 >= 0
-            ? state.currentTrackIndex - 1
-            : state.isPlaylistLooping
-            ? state.currentPlaylist.tracks.length - 1
-            : -1;
-        return { ...state, currentTrackIndex: previousIndex };
       default:
         return state;
     }

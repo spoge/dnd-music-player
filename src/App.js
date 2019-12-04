@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 
-import PlaylistView from "./components/PlaylistView";
+import PlaylistPage from "./components/PlaylistPage";
 
 // import { Store } from "./Store.js";
 
@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div className="App">
-      <PlaylistView />
+      <PlaylistPage />
     </div>
   );
 }

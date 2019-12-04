@@ -3,7 +3,7 @@ import { Store } from "../Store.js";
 import "./PlaylistInputRow.scss";
 
 const PlaylistInputRow = ({
-  openFileClick,
+  newPlaylistClick,
   addToPlaylistClick,
   openPlaylist,
   savePlaylist
@@ -14,7 +14,7 @@ const PlaylistInputRow = ({
   return (
     <div className="playlist-inputs-wrapper">
       <div className="playlist-input">
-        <button onClick={openFileClick}>New playlist</button>
+        <button onClick={newPlaylistClick}>New playlist</button>
       </div>
       <div className="playlist-input">
         <button onClick={addToPlaylistClick}>Add to playlist</button>

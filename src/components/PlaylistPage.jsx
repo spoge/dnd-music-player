@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
 import ReactPlayer from "react-player";
-import "./PlaylistView.scss";
+import "./PlaylistPage.scss";
 import fileUtils from "../utils/file-util";
 import { Store } from "../Store.js";
 
 import * as mm from "music-metadata-browser";
 import PlaylistInputRow from "./PlaylistInputRow";
-import PlaylistList from "./PlaylistList";
+import PlaylistMenuView from "./PlaylistMenuView";
+import PlaylistContentView from "./PlaylistContentView";
 
-const PlaylistView = () => {
+const PlaylistPage = () => {
   const globalState = useContext(Store);
   const { state, dispatch } = globalState;
 
@@ -25,6 +26,13 @@ const PlaylistView = () => {
     });
   };
 
+  const dispatchNewPlaylist = tracks => {
+    dispatch({
+      type: "NEW_PLAYLIST",
+      payload: tracks
+    });
+  };
+
   const dispatchLoadPlaylist = playlist => {
     dispatch({
       type: "LOAD_PLAYLIST",
@@ -32,7 +40,7 @@ const PlaylistView = () => {
     });
   };
 
-  const openFileClick = async () => {
+  const newPlaylistClick = async () => {
     const newUrls = await fileUtils.openAudioFiles();
     if (newUrls.length > 0) {
       const promises = newUrls.map(url =>
@@ -45,7 +53,7 @@ const PlaylistView = () => {
       );
 
       Promise.all(promises).then(tracks => {
-        dispatchSetTracksForPlaylist(tracks);
+        dispatchNewPlaylist(tracks);
       });
     }
   };
@@ -96,7 +104,7 @@ const PlaylistView = () => {
   const savePlaylist = async () => {
     if (state.currentPlaylist.tracks.length > 0) {
       const newPlaylist = await fileUtils.savePlaylist({
-        name: "",
+        name: state.currentPlaylist.name,
         urls: state.currentPlaylist.tracks.map(track => track.url)
       });
 
@@ -121,15 +129,22 @@ const PlaylistView = () => {
   };
 
   return (
-    <div className="playlist-view">
+    <div className="playlist-page">
       <div className="playlist-wrapper">
         <PlaylistInputRow
-          openFileClick={openFileClick}
+          newPlaylistClick={newPlaylistClick}
           addToPlaylistClick={addToPlaylistClick}
           openPlaylist={openPlaylist}
           savePlaylist={savePlaylist}
         />
-        <PlaylistList />
+        <div className="playlist-contents-wrapper">
+          <div className="playlist-menu-wrapper size-1-4">
+            <PlaylistMenuView />
+          </div>
+          <div className="playlist-content-wrapper size-3-4">
+            <PlaylistContentView />
+          </div>
+        </div>
       </div>
 
       <div className="player-wrapper">
@@ -154,4 +169,4 @@ const PlaylistView = () => {
   );
 };
 
-export default PlaylistView;
+export default PlaylistPage;
