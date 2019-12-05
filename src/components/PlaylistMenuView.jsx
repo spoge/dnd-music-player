@@ -21,7 +21,8 @@ const PlaylistMenuView = () => {
               state.currentPlaylist.name === playlist.name
                 ? "current-playlist"
                 : ""
-            }`}
+            }
+            `}
             key={playlist.name}
             onClick={() => {
               dispatch({
@@ -30,7 +31,7 @@ const PlaylistMenuView = () => {
               });
             }}
           >
-            <p>{playlist.name}</p>
+            <p>{`${playlist.name}${playlist.saved ? "" : "*"}`}</p>
           </div>
         );
       })}

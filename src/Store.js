@@ -6,7 +6,8 @@ const initialState = {
   playlists: [],
   currentPlaylist: {
     name: "",
-    tracks: []
+    tracks: [],
+    saved: false
   },
   currentTrackUrl: "",
   nextTrackUrl: "",
@@ -49,7 +50,8 @@ const StoreProvider = props => {
       case "NEW_PLAYLIST":
         const newPlaylist = {
           name: `New playlist ${state.playlists.length + 1}`,
-          tracks: action.payload
+          tracks: action.payload,
+          saved: false
         };
 
         return {
@@ -61,12 +63,19 @@ const StoreProvider = props => {
       case "LOAD_PLAYLIST":
         const loadedPlaylist = {
           name: action.payload.name,
-          tracks: [...action.payload.tracks]
+          tracks: [...action.payload.tracks],
+          saved: true
         };
+
+        const loadedPlaylistName =
+          action.payload.previousName === undefined ||
+          action.payload.previousName === ""
+            ? action.payload.name
+            : action.payload.previousName;
 
         let duplicatePlaylistIndex = state.playlists
           .map(playlist => playlist.name)
-          .indexOf(loadedPlaylist.name);
+          .indexOf(loadedPlaylistName);
 
         return {
           ...state,
@@ -77,25 +86,37 @@ const StoreProvider = props => {
               ? state.playlists.map((playlist, index) =>
                   index === duplicatePlaylistIndex
                     ? {
-                        name: playlist.name,
-                        tracks: [...loadedPlaylist.tracks]
+                        name: loadedPlaylist.name,
+                        tracks: [...loadedPlaylist.tracks],
+                        saved: loadedPlaylist.saved
                       }
                     : playlist
                 )
               : [...state.playlists, loadedPlaylist],
           currentPlaylist: {
             name: action.payload.name,
-            tracks: [...action.payload.tracks]
+            tracks: [...action.payload.tracks],
+            saved: action.payload.saved
           },
           currentIndex: 0,
           currentUrl: loadedPlaylist.tracks[0]
         };
-      case "SET_TRACKS_FOR_CURRENT_PLAYLIST":
+      case "ADD_TRACKS_TO_CURRENT_PLAYLIST":
         return {
           ...state,
+          playlists: state.playlists.map(playlist =>
+            playlist.name === state.currentPlaylist.name
+              ? {
+                  name: playlist.name,
+                  tracks: [...action.payload],
+                  saved: false
+                }
+              : playlist
+          ),
           currentPlaylist: {
             name: state.currentPlaylist.name,
-            tracks: [...action.payload]
+            tracks: [...action.payload],
+            saved: false
           }
         };
       case "PLAY_SELECTED_TRACK":

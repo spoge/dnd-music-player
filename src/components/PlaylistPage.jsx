@@ -19,9 +19,9 @@ const PlaylistPage = () => {
     });
   };
 
-  const dispatchSetTracksForPlaylist = tracks => {
+  const dispatchAddTracksToCurrentPlaylist = tracks => {
     dispatch({
-      type: "SET_TRACKS_FOR_CURRENT_PLAYLIST",
+      type: "ADD_TRACKS_TO_CURRENT_PLAYLIST",
       payload: tracks
     });
   };
@@ -59,6 +59,10 @@ const PlaylistPage = () => {
   };
 
   const addToPlaylistClick = async () => {
+    if (state.currentPlaylist.name === "") {
+      return;
+    }
+
     const newTracks = await fileUtils.openAudioFiles();
 
     const promises = newTracks.map(url =>
@@ -79,7 +83,9 @@ const PlaylistPage = () => {
         },
         []
       );
-      dispatchSetTracksForPlaylist(newTracks);
+      if (newTracks.length !== state.currentPlaylist.tracks.length) {
+        dispatchAddTracksToCurrentPlaylist(newTracks);
+      }
     });
   };
 
@@ -96,7 +102,11 @@ const PlaylistPage = () => {
       );
 
       Promise.all(promises).then(tracks => {
-        dispatchLoadPlaylist({ name: newPlaylist.name, tracks: tracks });
+        dispatchLoadPlaylist({
+          name: newPlaylist.name,
+          tracks: tracks,
+          saved: true
+        });
       });
     }
   };
@@ -121,7 +131,9 @@ const PlaylistPage = () => {
         Promise.all(promises).then(tracks => {
           dispatchLoadPlaylist({
             name: newPlaylist.name,
-            tracks: tracks
+            previousName: newPlaylist.previousName,
+            tracks: tracks,
+            saved: true
           });
         });
       }

@@ -22,7 +22,6 @@ const fileUtils = {
       title: "Save playlist",
       defaultPath: content.name ? content.name : "New playlist",
       buttonLabel: "Save",
-
       filters: [{ name: "json", extensions: ["json"] }]
     };
 
@@ -35,10 +34,15 @@ const fileUtils = {
           .pop()
           .split(".")[0];
 
+        let previousName = content.name !== fileName ? content.name : "";
+
         if (content.name === "") {
+          content.name = fileName;
+        } else if (previousName !== "") {
           content.name = fileName;
         }
         fs.writeFileSync(result.filePath, JSON.stringify(content), "utf-8");
+        content.previousName = previousName;
         return content;
       } else {
         return { name: "", urls: [] };
