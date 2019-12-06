@@ -36,11 +36,10 @@ const fileUtils = {
 
         let previousName = content.name !== fileName ? content.name : "";
 
-        if (content.name === "") {
-          content.name = fileName;
-        } else if (previousName !== "") {
+        if (content.name === "" || previousName !== "") {
           content.name = fileName;
         }
+
         fs.writeFileSync(result.filePath, JSON.stringify(content), "utf-8");
         content.previousName = previousName;
         return content;

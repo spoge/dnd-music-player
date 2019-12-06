@@ -13,7 +13,7 @@ const PlaylistPage = () => {
   const globalState = useContext(Store);
   const { state, dispatch } = globalState;
 
-  const dispatchNextTrack = url => {
+  const dispatchNextTrack = () => {
     dispatch({
       type: "NEXT_TRACK"
     });
