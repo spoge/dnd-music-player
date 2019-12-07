@@ -9,7 +9,7 @@ const PlaylistContentView = () => {
 
   return (
     <div className="track-list">
-      {state.currentPlaylist.tracks.length > 0 ? (
+      {state.currentViewingPlaylist.tracks.length > 0 ? (
         <div className="track-wrapper">
           <div className="track-item track-item-1-2">
             <h3>TITLE</h3>
@@ -22,7 +22,7 @@ const PlaylistContentView = () => {
           </div>
         </div>
       ) : null}
-      {state.currentPlaylist.tracks.map(track => {
+      {state.currentViewingPlaylist.tracks.map(track => {
         return (
           <div
             className={`track-wrapper ${

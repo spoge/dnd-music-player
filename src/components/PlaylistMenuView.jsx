@@ -18,15 +18,19 @@ const PlaylistMenuView = () => {
         return (
           <div
             className={`playlist-wrapper ${
-              state.currentPlaylist.name === playlist.name
+              state.currentViewingPlaylist.name === playlist.name
+                ? "selected-playlist"
+                : ""
+            } ${
+              state.currentPlayingPlaylist.name === playlist.name
                 ? "current-playlist"
                 : ""
-            }
+            } 
             `}
             key={playlist.name}
             onClick={() => {
               dispatch({
-                type: "PLAY_SELECTED_PLAYLIST",
+                type: "VIEW_SELECTED_PLAYLIST",
                 payload: playlist.name
               });
             }}

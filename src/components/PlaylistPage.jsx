@@ -19,7 +19,7 @@ const PlaylistPage = () => {
     });
   };
 
-  const dispatchAddTracksToCurrentPlaylist = tracks => {
+  const dispatchAddTracksToCurrentViewingPlaylist = tracks => {
     dispatch({
       type: "ADD_TRACKS_TO_CURRENT_PLAYLIST",
       payload: tracks
@@ -59,7 +59,7 @@ const PlaylistPage = () => {
   };
 
   const addToPlaylistClick = async () => {
-    if (state.currentPlaylist.name === "") {
+    if (state.currentViewingPlaylist.name === "") {
       return;
     }
 
@@ -75,16 +75,16 @@ const PlaylistPage = () => {
     );
 
     Promise.all(promises).then(tracks => {
-      const newTracks = [...state.currentPlaylist.tracks, ...tracks].reduce(
-        (unique, item) => {
-          return unique.filter(u => u.url === item.url).length > 0
-            ? unique
-            : [...unique, item];
-        },
-        []
-      );
-      if (newTracks.length !== state.currentPlaylist.tracks.length) {
-        dispatchAddTracksToCurrentPlaylist(newTracks);
+      const newTracks = [
+        ...state.currentViewingPlaylist.tracks,
+        ...tracks
+      ].reduce((unique, item) => {
+        return unique.filter(u => u.url === item.url).length > 0
+          ? unique
+          : [...unique, item];
+      }, []);
+      if (newTracks.length !== state.currentViewingPlaylist.tracks.length) {
+        dispatchAddTracksToCurrentViewingPlaylist(newTracks);
       }
     });
   };
@@ -114,10 +114,10 @@ const PlaylistPage = () => {
   };
 
   const savePlaylist = async () => {
-    if (state.currentPlaylist.tracks.length > 0) {
+    if (!state.currentViewingPlaylist.saved) {
       const newPlaylist = await fileUtils.savePlaylist({
-        name: state.currentPlaylist.name,
-        urls: state.currentPlaylist.tracks.map(track => track.url)
+        name: state.currentViewingPlaylist.name,
+        urls: state.currentViewingPlaylist.tracks.map(track => track.url)
       });
 
       if (newPlaylist.name !== "" && newPlaylist.urls.length > 0) {

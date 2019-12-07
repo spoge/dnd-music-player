@@ -4,7 +4,12 @@ export const Store = React.createContext();
 
 const initialState = {
   playlists: [],
-  currentPlaylist: {
+  currentPlayingPlaylist: {
+    name: "",
+    tracks: [],
+    saved: false
+  },
+  currentViewingPlaylist: {
     name: "",
     tracks: [],
     saved: false
@@ -30,21 +35,14 @@ const StoreProvider = props => {
         return { ...state, isPlaylistLooping: action.payload };
       case "TOGGLE_LOOPING_TRACK_ENABLED":
         return { ...state, isTrackLooping: action.payload };
-      case "SELECT_CURRENT_PLAYLIST":
-        return {
-          ...state,
-          currentPlaylist: state.playlists[action.payload],
-          currentIndex: 0,
-          currentUrl: state.playlists[action.payload].tracks[0]
-        };
-      case "PLAY_SELECTED_PLAYLIST":
+      case "VIEW_SELECTED_PLAYLIST":
         const selectedPlaylistIndex = state.playlists
           .map(playlist => playlist.name)
           .indexOf(action.payload);
 
         return {
           ...state,
-          currentPlaylist: state.playlists[selectedPlaylistIndex]
+          currentViewingPlaylist: state.playlists[selectedPlaylistIndex]
         };
 
       case "NEW_PLAYLIST":
@@ -57,7 +55,7 @@ const StoreProvider = props => {
         return {
           ...state,
           playlists: [...state.playlists, newPlaylist],
-          currentPlaylist: newPlaylist
+          currentViewingPlaylist: newPlaylist
         };
 
       case "LOAD_PLAYLIST":
@@ -93,19 +91,28 @@ const StoreProvider = props => {
                     : playlist
                 )
               : [...state.playlists, loadedPlaylist],
-          currentPlaylist: {
-            name: action.payload.name,
-            tracks: [...action.payload.tracks],
-            saved: action.payload.saved
+          currentViewingPlaylist: {
+            name: loadedPlaylist.name,
+            tracks: [...loadedPlaylist.tracks],
+            saved: loadedPlaylist.saved
           },
-          currentIndex: 0,
-          currentUrl: loadedPlaylist.tracks[0]
+          currentPlayingPlaylist: {
+            name:
+              state.currentPlayingPlaylist.name === loadedPlaylistName
+                ? loadedPlaylist.name
+                : state.currentPlayingPlaylist.name,
+            tracks: [...state.currentPlayingPlaylist.tracks],
+            saved:
+              state.currentPlayingPlaylist.name === loadedPlaylistName
+                ? true
+                : state.currentPlayingPlaylist.saved
+          }
         };
       case "ADD_TRACKS_TO_CURRENT_PLAYLIST":
         return {
           ...state,
           playlists: state.playlists.map(playlist =>
-            playlist.name === state.currentPlaylist.name
+            playlist.name === state.currentViewingPlaylist.name
               ? {
                   name: playlist.name,
                   tracks: [...action.payload],
@@ -113,8 +120,8 @@ const StoreProvider = props => {
                 }
               : playlist
           ),
-          currentPlaylist: {
-            name: state.currentPlaylist.name,
+          currentViewingPlaylist: {
+            name: state.currentViewingPlaylist.name,
             tracks: [...action.payload],
             saved: false
           }
@@ -123,31 +130,32 @@ const StoreProvider = props => {
         return {
           ...state,
           currentTrackUrl: action.payload,
-          isPlaying: true
+          isPlaying: true,
+          currentPlayingPlaylist: state.currentViewingPlaylist
         };
       case "NEXT_TRACK":
-        let nextIndex = state.currentPlaylist.tracks
+        let nextIndex = state.currentPlayingPlaylist.tracks
           .map(track => track.url)
           .indexOf(state.currentTrackUrl);
         let nextUrl = state.currentTrackUrl;
         let isPlaying = state.isPlaying;
 
         // next song exists
-        if (nextIndex + 1 < state.currentPlaylist.tracks.length) {
+        if (nextIndex + 1 < state.currentPlayingPlaylist.tracks.length) {
           // selected playlist contains current track
           if (
-            state.currentPlaylist.tracks
+            state.currentPlayingPlaylist.tracks
               .map(tracks => tracks.url)
               .filter(url => state.currentTrackUrl === url).length > 0
           ) {
-            nextUrl = state.currentPlaylist.tracks[nextIndex + 1].url;
+            nextUrl = state.currentPlayingPlaylist.tracks[nextIndex + 1].url;
           } // selected playlist doesn't contain current track, i.e. viewing another playlist
           else {
-            nextUrl = state.currentPlaylist.tracks[0].url;
+            nextUrl = state.currentPlayingPlaylist.tracks[0].url;
           }
         } // last song, loop if isPlaylistLooping is set
         else if (state.isPlaylistLooping) {
-          nextUrl = state.currentPlaylist.tracks[0].url;
+          nextUrl = state.currentPlayingPlaylist.tracks[0].url;
         } else {
           isPlaying = false;
         }
