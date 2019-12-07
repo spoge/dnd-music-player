@@ -89,23 +89,25 @@ const PlaylistPage = () => {
     });
   };
 
-  const openPlaylist = async () => {
-    const newPlaylist = await fileUtils.loadPlaylist();
-    if (newPlaylist.name !== "" && newPlaylist.urls.length > 0) {
-      const promises = newPlaylist.urls.map(url =>
-        mm.fetchFromUrl(url).then(metadata => ({
-          url: url,
-          title: metadata.common.title,
-          album: metadata.common.album,
-          artist: metadata.common.artist
-        }))
-      );
+  const openPlaylists = async () => {
+    const newPlaylists = await fileUtils.loadPlaylists();
+    if (newPlaylists.length > 0) {
+      newPlaylists.forEach(newPlaylist => {
+        const promises = newPlaylist.urls.map(url =>
+          mm.fetchFromUrl(url).then(metadata => ({
+            url: url,
+            title: metadata.common.title,
+            album: metadata.common.album,
+            artist: metadata.common.artist
+          }))
+        );
 
-      Promise.all(promises).then(tracks => {
-        dispatchLoadPlaylist({
-          name: newPlaylist.name,
-          tracks: tracks,
-          saved: true
+        Promise.all(promises).then(tracks => {
+          dispatchLoadPlaylist({
+            name: newPlaylist.name,
+            tracks: tracks,
+            saved: true
+          });
         });
       });
     }
@@ -146,7 +148,7 @@ const PlaylistPage = () => {
         <PlaylistInputRow
           newPlaylistClick={newPlaylistClick}
           addToPlaylistClick={addToPlaylistClick}
-          openPlaylist={openPlaylist}
+          openPlaylist={openPlaylists}
           savePlaylist={savePlaylist}
         />
         <div className="playlist-contents-wrapper">

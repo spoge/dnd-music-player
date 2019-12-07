@@ -20,7 +20,7 @@ const PlaylistInputRow = ({
         <button onClick={addToPlaylistClick}>Add to playlist</button>
       </div>
       <div className="playlist-input">
-        <button onClick={openPlaylist}>Open playlist</button>
+        <button onClick={openPlaylist}>Open playlists</button>
       </div>
       <div className="playlist-input">
         <button onClick={savePlaylist}>Save playlist</button>

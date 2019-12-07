@@ -48,11 +48,11 @@ const fileUtils = {
       }
     });
   },
-  async loadPlaylist() {
+  async loadPlaylists() {
     const result = await remote.dialog
       .showOpenDialog({
         title: "Open Playlist",
-        properties: ["openFile"],
+        properties: ["openFile", "multiSelections"],
         filters: [
           { name: "json", extensions: ["json"] },
           { name: "All Files", extensions: ["*"] }
@@ -65,12 +65,14 @@ const fileUtils = {
         return files;
       })
       .then(files => {
-        if (files && files.filePaths && files.filePaths.length > 0) {
-          return JSON.parse(fs.readFileSync(files.filePaths[0]));
+        if (files.filePaths === undefined) {
+          return [];
         }
+        return files.filePaths.map(filePath => {
+          return JSON.parse(fs.readFileSync(filePath));
+        });
       });
-
-    return result ? result : { name: "", urls: [] };
+    return result ? result : [{ name: "", urls: [] }];
   }
 };
 
