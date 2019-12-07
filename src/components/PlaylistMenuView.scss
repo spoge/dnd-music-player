@@ -6,15 +6,11 @@
   flex-direction: column;
   .playlist-wrapper {
     font-size: 1em;
-    // display: flex;
-    // flex-direction: row;
-    // justify-content: space-between;
     padding: 0;
     margin: 0;
     width: 100%;
 
     h3 {
-      //padding: 0.2em 0.5em;
       margin: 0.1em 0.4em;
 
       // make text unselecteble
@@ -25,7 +21,6 @@
     }
     p {
       font-weight: bold;
-      //padding: 0.2em 0.5em;
       margin: 0.2em 0.5em;
       white-space: nowrap;
       overflow: hidden;
