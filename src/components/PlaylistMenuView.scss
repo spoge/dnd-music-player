@@ -12,6 +12,9 @@
 
     h3 {
       margin: 0.1em 0.4em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       // make text unselecteble
       -webkit-user-select: none; /* Safari */

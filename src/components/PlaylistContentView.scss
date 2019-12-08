@@ -4,28 +4,34 @@
   display: flex;
   flex-direction: column;
   .track-wrapper {
+    display: flex;
+    flex-direction: row;
+
+    p {
+      // font-weight: bold;
+      margin: 0.2em 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      // make text unselecteble
+      -webkit-user-select: none; /* Safari */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE10+/Edge */
+      user-select: none; /* Standard */
+    }
+  }
+  .track-meta-wrapper {
     font-size: 1em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
-
-    .track-item {
-      align-self: center;
-      text-align: left;
+    width: calc(100% - 1em);
+    h3 {
+      margin: 0.1em 0.4em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .track-item-1-2 {
-      width: 50%;
-    }
-    .track-item-1-4 {
-      width: 25%;
-    }
-    h3 {
-      margin: 0.1em 0.4em;
 
       // make text unselecteble
       -webkit-user-select: none; /* Safari */
@@ -46,6 +52,26 @@
       -ms-user-select: none; /* IE10+/Edge */
       user-select: none; /* Standard */
     }
+  }
+  .track-item {
+    align-self: center;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .track-item-last {
+    margin-right: 1em;
+  }
+  .track-item-1-2 {
+    width: 50%;
+  }
+  .track-item-1-4 {
+    width: 25%;
+  }
+  .track-item-4-10 {
+    width: 40%;
   }
   .current-track {
     color: red;

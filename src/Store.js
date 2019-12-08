@@ -165,6 +165,32 @@ const StoreProvider = props => {
           currentTrackUrl: nextUrl,
           isPlaying
         };
+      case "DELETE_SELECTED_TRACK":
+        const thisPlaylist = {
+          name: state.currentViewingPlaylist.name,
+          tracks: state.currentViewingPlaylist.tracks.filter(
+            track => track.url !== action.payload
+          ),
+          saved: false
+        };
+
+        return {
+          ...state,
+          currentViewingPlaylist: thisPlaylist,
+          currentPlayingPlaylist:
+            thisPlaylist.name === state.currentPlayingPlaylist.name
+              ? thisPlaylist
+              : state.currentPlayingPlaylist,
+          playlists: state.playlists.map(playlist =>
+            playlist.name === thisPlaylist.name ? thisPlaylist : playlist
+          ),
+          currentTrackUrl:
+            state.currentTrackUrl === action.payload &&
+            state.currentViewingPlaylist.name ===
+              state.currentPlayingPlaylist.name
+              ? ""
+              : state.currentTrackUrl
+        };
       default:
         return state;
     }

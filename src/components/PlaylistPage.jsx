@@ -120,7 +120,7 @@ const PlaylistPage = () => {
         urls: state.currentViewingPlaylist.tracks.map(track => track.url)
       });
 
-      if (newPlaylist.name !== "" && newPlaylist.urls.length > 0) {
+      if (newPlaylist.name !== "") {
         const promises = newPlaylist.urls.map(url =>
           mm.fetchFromUrl(url).then(metadata => ({
             url: url,
@@ -140,6 +140,14 @@ const PlaylistPage = () => {
         });
       }
     }
+  };
+
+  const shouldLoopTrack = () => {
+    return (
+      state.isTrackLooping ||
+      (state.isPlaylistLooping &&
+        state.currentPlayingPlaylist.tracks.length === 1)
+    );
   };
 
   return (
@@ -172,7 +180,7 @@ const PlaylistPage = () => {
           onEnded={dispatchNextTrack}
           controls
           playing={state.isPlaying}
-          loop={state.isTrackLooping}
+          loop={shouldLoopTrack()}
           volume={state.volume}
           url={state.currentTrackUrl}
           width="100%"
