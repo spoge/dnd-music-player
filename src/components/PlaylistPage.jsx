@@ -7,7 +7,7 @@ import { Store } from "../Store.js";
 import * as mm from "music-metadata-browser";
 import PlaylistInputsView from "./Input/PlaylistInputsView";
 import PlaylistMenuView from "./PlaylistMenu/PlaylistMenuView";
-import PlaylistContentView from "./Playlist/PlaylistContentView";
+import PlaylistContentView from "./PlaylistContent/PlaylistContentView";
 
 const PlaylistPage = () => {
   const globalState = useContext(Store);
