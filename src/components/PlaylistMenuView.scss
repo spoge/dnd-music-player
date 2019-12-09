@@ -1,7 +1,8 @@
-@import "../App.css";
+@import "../App.scss";
+@import "../styles/colors.scss";
 
 .playlist-menu {
-  border-right: 1px solid gray;
+  border-right: 1px solid $gray;
   display: flex;
   flex-direction: column;
   .playlist-wrapper {
@@ -37,9 +38,9 @@
     }
   }
   .selected-playlist {
-    color: lightsalmon;
+    color: $light-salmon;
   }
   .current-playlist {
-    color: red;
+    color: $red;
   }
 }

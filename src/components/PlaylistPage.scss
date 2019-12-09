@@ -1,11 +1,12 @@
-@import "../App.css";
+@import "../App.scss";
+@import "../styles/colors.scss";
 
 .playlist-page {
-  background-color: #282c34;
+  background-color: $dark-blue;
   min-height: 100vh;
   width: 100%;
   font-size: calc(8px + 2vmin);
-  color: white;
+  color: $white;
 
   .playlist-wrapper {
     padding: 1em;
@@ -17,7 +18,7 @@
     width: 100%;
     position: fixed;
     bottom: 0;
-    background-color: #282c34;
+    background-color: $dark-blue;
   }
 
   .playlist-contents-wrapper {
