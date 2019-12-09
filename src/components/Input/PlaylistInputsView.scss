@@ -1,4 +1,4 @@
-@import "../App.scss";
+@import "../../App.scss";
 
 .playlist-inputs-wrapper {
   display: flex;
@@ -26,13 +26,5 @@
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
-    .checkbox-wrapper {
-      padding: 0.2em;
-      input {
-        margin: 0;
-        margin-right: 0.2em;
-        vertical-align: bottom;
-      }
-    }
   }
 }

@@ -5,9 +5,9 @@ import fileUtils from "../utils/file-util";
 import { Store } from "../Store.js";
 
 import * as mm from "music-metadata-browser";
-import PlaylistInputRow from "./PlaylistInputRow";
-import PlaylistMenuView from "./PlaylistMenuView";
-import PlaylistContentView from "./PlaylistContentView";
+import PlaylistInputsView from "./Input/PlaylistInputsView";
+import PlaylistMenuView from "./PlaylistMenu/PlaylistMenuView";
+import PlaylistContentView from "./Playlist/PlaylistContentView";
 
 const PlaylistPage = () => {
   const globalState = useContext(Store);
@@ -153,7 +153,7 @@ const PlaylistPage = () => {
   return (
     <div className="playlist-page">
       <div className="playlist-wrapper">
-        <PlaylistInputRow
+        <PlaylistInputsView
           newPlaylistClick={newPlaylistClick}
           addToPlaylistClick={addToPlaylistClick}
           openPlaylist={openPlaylists}
