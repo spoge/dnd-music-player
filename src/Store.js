@@ -126,6 +126,26 @@ const StoreProvider = props => {
             saved: false
           }
         };
+      case "REORDER_CURRENT_PLAYLIST":
+        const reorderCurrentPlaylist = {
+          name: state.currentViewingPlaylist.name,
+          tracks: [...action.payload],
+          saved: false
+        };
+        return {
+          ...state,
+          currentViewingPlaylist: reorderCurrentPlaylist,
+          playlists: state.playlists.map(playlist =>
+            playlist.name === state.currentViewingPlaylist.name
+              ? reorderCurrentPlaylist
+              : playlist
+          ),
+          currentPlayingPlaylist:
+            state.currentPlayingPlaylist.name ===
+            state.currentViewingPlaylist.name
+              ? reorderCurrentPlaylist
+              : state.currentPlayingPlaylist
+        };
       case "PLAY_SELECTED_TRACK":
         return {
           ...state,
