@@ -10,6 +10,8 @@
     padding: 0;
     margin: 0;
     width: 100%;
+    overflow: auto;
+    cursor: default;
 
     h3 {
       margin: 0.1em 0.4em;

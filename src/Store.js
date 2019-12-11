@@ -146,6 +146,11 @@ const StoreProvider = props => {
               ? reorderCurrentPlaylist
               : state.currentPlayingPlaylist
         };
+      case "REORDER_PLAYLISTS":
+        return {
+          ...state,
+          playlists: [...action.payload]
+        };
       case "PLAY_SELECTED_TRACK":
         return {
           ...state,
