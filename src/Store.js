@@ -58,6 +58,34 @@ const StoreProvider = props => {
           currentViewingPlaylist: newPlaylist
         };
 
+      case "DELETE_PLAYLIST":
+        return {
+          ...state,
+          playlists: state.playlists.filter(
+            playlist => playlist.name !== action.payload
+          ),
+          currentTrackUrl:
+            state.currentPlayingPlaylist.name === action.payload
+              ? ""
+              : state.currentTrackUrl,
+          currentPlayingPlaylist:
+            state.currentPlayingPlaylist.name === action.payload
+              ? {
+                  name: "",
+                  tracks: [],
+                  saved: false
+                }
+              : state.currentPlayingPlaylist,
+          currentViewingPlaylist:
+            state.currentViewingPlaylist.name === action.payload
+              ? {
+                  name: "",
+                  tracks: [],
+                  saved: false
+                }
+              : state.currentViewingPlaylist
+        };
+
       case "LOAD_PLAYLIST":
         const loadedPlaylist = {
           name: action.payload.name,
