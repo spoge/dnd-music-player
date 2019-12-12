@@ -45,6 +45,36 @@ const StoreProvider = props => {
           currentViewingPlaylist: state.playlists[selectedPlaylistIndex]
         };
 
+      case "CHANGE_PLAYLIST_NAME":
+        return {
+          ...state,
+          playlists: state.playlists.map(playlist =>
+            playlist.name === action.payload.oldName
+              ? {
+                  ...playlist,
+                  name: action.payload.newName,
+                  saved: false
+                }
+              : playlist
+          ),
+          currentViewingPlaylist:
+            state.currentViewingPlaylist.name === action.payload.oldName
+              ? {
+                  ...state.currentViewingPlaylist,
+                  name: action.payload.newName,
+                  saved: false
+                }
+              : state.currentViewingPlaylist,
+          currentPlayingPlaylist:
+            state.currentPlayingPlaylist.name === action.payload.oldName
+              ? {
+                  ...state.currentPlayingPlaylist,
+                  name: action.payload.newName,
+                  saved: false
+                }
+              : state.currentPlayingPlaylist
+        };
+
       case "NEW_PLAYLIST":
         const newPlaylist = {
           name: `New playlist ${state.playlists.length + 1}`,
