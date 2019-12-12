@@ -49,6 +49,10 @@ const PlaylistMenuView = () => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      style={{
+                        outline: "none",
+                        ...provided.draggableProps.style
+                      }}
                     >
                       <PlaylistCard key={playlist.name} playlist={playlist} />
                     </div>

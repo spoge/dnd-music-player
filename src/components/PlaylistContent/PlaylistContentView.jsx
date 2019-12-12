@@ -60,6 +60,10 @@ const PlaylistContentView = () => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      style={{
+                        outline: "none",
+                        ...provided.draggableProps.style
+                      }}
                     >
                       <TrackCard key={track.url} track={track} />
                     </div>
