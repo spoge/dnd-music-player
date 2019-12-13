@@ -27,17 +27,9 @@ const TrackCard = ({ track }) => {
             <div className="track-item track-item-1-4">
               <p>{track.album}</p>
             </div>
-            <div className="track-item track-item-1-4 track-item-last">
+            <div className="track-item track-item-1-4">
               <p>{track.artist}</p>
             </div>
-          </div>
-          <div
-            className="track-item"
-            onClick={() => {
-              dispatch({ type: "DELETE_SELECTED_TRACK", payload: track.url });
-            }}
-          >
-            <p>X</p>
           </div>
         </div>
       </ContextMenuTrigger>

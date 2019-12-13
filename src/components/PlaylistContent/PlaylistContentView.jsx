@@ -38,7 +38,7 @@ const PlaylistContentView = () => {
             <div className="track-item track-item-1-4">
               <h3>ALBUM</h3>
             </div>
-            <div className="track-item track-item-1-4 track-item-last">
+            <div className="track-item track-item-1-4">
               <h3>ARTIST</h3>
             </div>
           </div>
