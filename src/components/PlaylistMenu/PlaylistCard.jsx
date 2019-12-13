@@ -77,7 +77,9 @@ const PlaylistCard = ({ playlist }) => {
           Edit name
         </MenuItem>
         <MenuItem divider />
-        <MenuItem onClick={deletePlaylist}>Delete</MenuItem>
+        <MenuItem
+          onClick={deletePlaylist}
+        >{`Delete "${playlist.name}"`}</MenuItem>
       </ContextMenu>
     </div>
   );
