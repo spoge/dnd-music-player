@@ -5,7 +5,8 @@
   display: flex;
   flex-direction: column;
 
-  .track-wrapper {
+  .track-wrapper,
+  .track-header {
     display: flex;
     flex-direction: row;
     cursor: default;
@@ -23,6 +24,9 @@
       -ms-user-select: none; /* IE10+/Edge */
       user-select: none; /* Standard */
     }
+  }
+  .track-wrapper:hover {
+    background-color: #ffffff11;
   }
   .track-meta-wrapper {
     font-size: 1em;

@@ -3,6 +3,7 @@ import "./PlaylistMenuView.scss";
 import "../../styles/react-contextmenu.scss";
 
 import { Store } from "../../Store.js";
+import fileUtils from "../../utils/file-util";
 
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
@@ -33,6 +34,13 @@ const PlaylistCard = ({ playlist }) => {
     if (e.keyCode === 13) {
       e.target.blur();
     }
+  };
+
+  const savePlaylist = async () => {
+    await fileUtils.savePlaylist({
+      name: playlist.name,
+      urls: playlist.tracks.map(track => track.url)
+    });
   };
 
   return (
@@ -78,6 +86,7 @@ const PlaylistCard = ({ playlist }) => {
         <MenuItem onClick={() => setIsEditable(!isEditable)}>
           Edit name
         </MenuItem>
+        <MenuItem onClick={savePlaylist}>{`Export as...`}</MenuItem>
         <MenuItem divider />
         <MenuItem
           onClick={deletePlaylist}

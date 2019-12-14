@@ -70,9 +70,17 @@ const fileUtils = {
         if (files.filePaths === undefined) {
           return [];
         }
-        return files.filePaths.map(filePath => {
-          return JSON.parse(fs.readFileSync(filePath));
-        });
+        return files.filePaths
+          .map(filePath => {
+            try {
+              return JSON.parse(fs.readFileSync(filePath));
+            } catch (err) {
+              console.warn(err);
+            }
+            console.warn("Couldn't load playlist");
+            return "";
+          })
+          .filter(result => result !== "");
       });
     return result ? result : [{ name: "", urls: [] }];
   },

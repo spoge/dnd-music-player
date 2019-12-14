@@ -30,22 +30,20 @@ const PlaylistContentView = () => {
 
   return (
     <div className="track-list">
-      {state.currentViewingPlaylist.tracks.length > 0 ? (
-        <div className="track-wrapper">
-          <div className="track-meta-wrapper">
-            <div className="track-item track-item-1-2">
-              <h3>TITLE</h3>
-            </div>
-            <div className="track-item track-item-1-4">
-              <h3>ALBUM</h3>
-            </div>
-            <div className="track-item track-item-1-4">
-              <h3>ARTIST</h3>
-            </div>
+      <div className="track-header">
+        <div className="track-meta-wrapper">
+          <div className="track-item track-item-1-2">
+            <h3>TITLE</h3>
           </div>
-          <div className="track-item"></div>
+          <div className="track-item track-item-1-4">
+            <h3>ALBUM</h3>
+          </div>
+          <div className="track-item track-item-1-4">
+            <h3>ARTIST</h3>
+          </div>
         </div>
-      ) : null}
+        <div className="track-item"></div>
+      </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {dropProvided => (

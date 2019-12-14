@@ -9,6 +9,8 @@ import PlaylistInputsView from "./Input/PlaylistInputsView";
 import PlaylistMenuView from "./PlaylistMenu/PlaylistMenuView";
 import PlaylistContentView from "./PlaylistContent/PlaylistContentView";
 
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+
 const PlaylistPage = () => {
   const globalState = useContext(Store);
   const { state, dispatch } = globalState;
@@ -27,10 +29,9 @@ const PlaylistPage = () => {
     dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
-  const dispatchNewPlaylist = tracks => {
+  const dispatchNewPlaylist = () => {
     dispatch({
-      type: "NEW_PLAYLIST",
-      payload: tracks
+      type: "NEW_PLAYLIST"
     });
     dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
@@ -43,44 +44,26 @@ const PlaylistPage = () => {
     dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
-  const newPlaylistClick = async () => {
-    const newUrls = await fileUtils.openAudioFiles();
-    if (newUrls.length > 0) {
-      const promises = newUrls.map(url =>
-        mm.fetchFromUrl(url).then(metadata => ({
+  const addToPlaylist = async () => {
+    if (state.currentViewingPlaylist.name === "") {
+      return;
+    }
+    const newTracks = await fileUtils.openAudioFiles();
+    const promises = newTracks.map(url =>
+      mm.fetchFromUrl(url).then(metadata => {
+        return {
           url: url,
           title: metadata.common.title,
           album: metadata.common.album,
           artist: metadata.common.artist
-        }))
-      );
-
-      Promise.all(promises).then(tracks => {
-        dispatchNewPlaylist(tracks);
-      });
-    }
-  };
-
-  const addToPlaylistClick = async () => {
-    if (state.currentViewingPlaylist.name === "") {
-      return;
-    }
-
-    const newTracks = await fileUtils.openAudioFiles();
-
-    const promises = newTracks.map(url =>
-      mm.fetchFromUrl(url).then(metadata => ({
-        url: url,
-        title: metadata.common.title,
-        album: metadata.common.album,
-        artist: metadata.common.artist
-      }))
+        };
+      })
     );
 
     Promise.all(promises).then(tracks => {
       const newTracks = [
         ...state.currentViewingPlaylist.tracks,
-        ...tracks
+        ...tracks.filter(track => track.title !== undefined)
       ].reduce((unique, item) => {
         return unique.filter(u => u.url === item.url).length > 0
           ? unique
@@ -92,7 +75,7 @@ const PlaylistPage = () => {
     });
   };
 
-  const openPlaylists = async () => {
+  const importPlaylists = async () => {
     const newPlaylists = await fileUtils.loadPlaylists();
     if (newPlaylists.length > 0) {
       newPlaylists.forEach(newPlaylist => {
@@ -115,35 +98,6 @@ const PlaylistPage = () => {
     }
   };
 
-  const savePlaylist = async () => {
-    if (!state.currentViewingPlaylist.saved) {
-      const newPlaylist = await fileUtils.savePlaylist({
-        name: state.currentViewingPlaylist.name,
-        urls: state.currentViewingPlaylist.tracks.map(track => track.url)
-      });
-
-      if (newPlaylist.name !== "") {
-        const promises = newPlaylist.urls.map(url =>
-          mm.fetchFromUrl(url).then(metadata => ({
-            url: url,
-            title: metadata.common.title,
-            album: metadata.common.album,
-            artist: metadata.common.artist
-          }))
-        );
-
-        Promise.all(promises).then(tracks => {
-          dispatchLoadPlaylist({
-            name: newPlaylist.name,
-            previousName: newPlaylist.previousName,
-            tracks: tracks,
-            saved: true
-          });
-        });
-      }
-    }
-  };
-
   const shouldLoopTrack = () => {
     return (
       state.isTrackLooping ||
@@ -153,42 +107,53 @@ const PlaylistPage = () => {
   };
 
   return (
-    <div className="playlist-page">
-      <div className="playlist-wrapper">
-        <PlaylistInputsView
-          newPlaylistClick={newPlaylistClick}
-          addToPlaylistClick={addToPlaylistClick}
-          openPlaylist={openPlaylists}
-          savePlaylist={savePlaylist}
-        />
-        <div className="playlist-contents-wrapper">
-          <div className="playlist-menu-wrapper size-1-4">
-            <PlaylistMenuView />
+    <div>
+      <ContextMenuTrigger id="global-context-menu">
+        <div className="playlist-page">
+          <div className="playlist-wrapper">
+            <div className="playlist-contents-wrapper">
+              <div className="playlist-menu-wrapper size-1-4">
+                <PlaylistMenuView />
+              </div>
+              <div className="playlist-content-wrapper size-3-4">
+                <PlaylistContentView />
+              </div>
+            </div>
+            <div className="input-checkbox-wrapper">
+              <PlaylistInputsView />
+            </div>
           </div>
-          <div className="playlist-content-wrapper size-3-4">
-            <PlaylistContentView />
+
+          <div className="player-wrapper">
+            <ReactPlayer
+              className="react-player"
+              config={{
+                file: {
+                  forceAudio: true
+                }
+              }}
+              onEnded={dispatchNextTrack}
+              controls
+              playing={state.isPlaying}
+              loop={shouldLoopTrack()}
+              volume={state.volume}
+              url={state.currentTrackUrl}
+              width="100%"
+              height="100%"
+            />
           </div>
         </div>
-      </div>
-
-      <div className="player-wrapper">
-        <ReactPlayer
-          className="react-player"
-          config={{
-            file: {
-              forceAudio: true
-            }
-          }}
-          onEnded={dispatchNextTrack}
-          controls
-          playing={state.isPlaying}
-          loop={shouldLoopTrack()}
-          volume={state.volume}
-          url={state.currentTrackUrl}
-          width="100%"
-          height="100%"
-        />
-      </div>
+      </ContextMenuTrigger>
+      <ContextMenu id="global-context-menu">
+        {state.currentViewingPlaylist.name !== "" ? (
+          <>
+            <MenuItem onClick={addToPlaylist}>Add tracks to playlist</MenuItem>
+            <MenuItem divider />
+          </>
+        ) : null}
+        <MenuItem onClick={dispatchNewPlaylist}>New playlist</MenuItem>
+        <MenuItem onClick={importPlaylists}>Import playlist</MenuItem>
+      </ContextMenu>
     </div>
   );
 };

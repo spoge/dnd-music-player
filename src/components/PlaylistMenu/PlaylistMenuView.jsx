@@ -29,12 +29,9 @@ const PlaylistMenuView = () => {
 
   return (
     <div className="playlist-menu">
-      {state.playlists.length > 0 ? (
-        <div className="playlist-wrapper">
-          <h3>PLAYLIST</h3>
-        </div>
-      ) : null}
-
+      <div className="playlist-header">
+        <h3>PLAYLIST</h3>
+      </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {dropProvided => (

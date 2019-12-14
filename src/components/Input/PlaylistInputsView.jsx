@@ -3,29 +3,12 @@ import { Store } from "../../Store.js";
 import "./PlaylistInputsView.scss";
 import InputCheckbox from "./InputCheckbox.jsx";
 
-const PlaylistInputsView = ({
-  newPlaylistClick,
-  addToPlaylistClick,
-  openPlaylist,
-  savePlaylist
-}) => {
+const PlaylistInputsView = () => {
   const globalState = useContext(Store);
   const { dispatch, state } = globalState;
 
   return (
     <div className="playlist-inputs-wrapper">
-      <div className="playlist-input">
-        <button onClick={newPlaylistClick}>New playlist</button>
-      </div>
-      <div className="playlist-input">
-        <button onClick={addToPlaylistClick}>Add to playlist</button>
-      </div>
-      <div className="playlist-input">
-        <button onClick={openPlaylist}>Open playlists</button>
-      </div>
-      <div className="playlist-input">
-        <button onClick={savePlaylist}>Save playlist</button>
-      </div>
       <div className="playlist-input checkboxes-wrapper">
         {/* <InputCheckbox
           onChange={() =>

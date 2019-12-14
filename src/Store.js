@@ -65,7 +65,7 @@ const StoreProvider = props => {
       case "NEW_PLAYLIST":
         const newPlaylist = {
           name: `New playlist ${state.playlists.length + 1}`,
-          tracks: action.payload
+          tracks: !action.payload ? [] : action.payload
         };
 
         return {
