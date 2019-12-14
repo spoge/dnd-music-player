@@ -15,31 +15,15 @@ const PlaylistPage = () => {
   const globalState = useContext(Store);
   const { state, dispatch } = globalState;
 
-  const dispatchNextTrack = () => {
+  const nextTrack = () => {
     dispatch({
       type: "NEXT_TRACK"
     });
   };
 
-  const dispatchAddTracksToCurrentViewingPlaylist = tracks => {
-    dispatch({
-      type: "ADD_TRACKS_TO_CURRENT_PLAYLIST",
-      payload: tracks
-    });
-    dispatch({ type: "SAVE_GLOBAL_STATE" });
-  };
-
-  const dispatchNewPlaylist = () => {
+  const newPlaylist = () => {
     dispatch({
       type: "NEW_PLAYLIST"
-    });
-    dispatch({ type: "SAVE_GLOBAL_STATE" });
-  };
-
-  const dispatchLoadPlaylist = playlist => {
-    dispatch({
-      type: "LOAD_PLAYLIST",
-      payload: playlist
     });
     dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
@@ -70,7 +54,10 @@ const PlaylistPage = () => {
           : [...unique, item];
       }, []);
       if (newTracks.length !== state.currentViewingPlaylist.tracks.length) {
-        dispatchAddTracksToCurrentViewingPlaylist(newTracks);
+        dispatch({
+          type: "ADD_TRACKS_TO_CURRENT_PLAYLIST",
+          payload: newTracks
+        });
       }
     });
   };
@@ -89,10 +76,14 @@ const PlaylistPage = () => {
         );
 
         Promise.all(promises).then(tracks => {
-          dispatchLoadPlaylist({
-            name: newPlaylist.name,
-            tracks: tracks
+          dispatch({
+            type: "LOAD_PLAYLIST",
+            payload: {
+              name: newPlaylist.name,
+              tracks: tracks
+            }
           });
+          dispatch({ type: "SAVE_GLOBAL_STATE" });
         });
       });
     }
@@ -132,7 +123,7 @@ const PlaylistPage = () => {
                   forceAudio: true
                 }
               }}
-              onEnded={dispatchNextTrack}
+              onEnded={nextTrack}
               controls
               playing={state.isPlaying}
               loop={shouldLoopTrack()}
@@ -151,7 +142,7 @@ const PlaylistPage = () => {
             <MenuItem divider />
           </>
         ) : null}
-        <MenuItem onClick={dispatchNewPlaylist}>New playlist</MenuItem>
+        <MenuItem onClick={newPlaylist}>New playlist</MenuItem>
         <MenuItem onClick={importPlaylists}>Import playlist</MenuItem>
       </ContextMenu>
     </div>

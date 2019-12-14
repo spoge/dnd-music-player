@@ -10,16 +10,6 @@ const PlaylistInputsView = () => {
   return (
     <div className="playlist-inputs-wrapper">
       <div className="playlist-input checkboxes-wrapper">
-        {/* <InputCheckbox
-          onChange={() =>
-            dispatch({
-              type: "TOGGLE_FADING_ENABLED",
-              payload: !state.isFadingEnabled
-            })
-          }
-          checked={state.isFadingEnabled}
-          label="Fade out"
-        /> */}
         <InputCheckbox
           onChange={() => {
             dispatch({
