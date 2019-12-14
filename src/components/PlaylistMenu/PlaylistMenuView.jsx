@@ -24,6 +24,7 @@ const PlaylistMenuView = () => {
     );
 
     dispatch({ type: "REORDER_PLAYLISTS", payload: playlists });
+    dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
   return (

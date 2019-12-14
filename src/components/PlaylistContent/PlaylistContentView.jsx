@@ -25,6 +25,7 @@ const PlaylistContentView = () => {
     );
 
     dispatch({ type: "REORDER_CURRENT_PLAYLIST", payload: items });
+    dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
   return (

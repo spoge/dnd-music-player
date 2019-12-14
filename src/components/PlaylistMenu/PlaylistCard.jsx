@@ -15,6 +15,7 @@ const PlaylistCard = ({ playlist }) => {
 
   const deletePlaylist = () => {
     dispatch({ type: "DELETE_PLAYLIST", payload: playlist.name });
+    dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
   const handleOnBlur = () => {
@@ -24,6 +25,7 @@ const PlaylistCard = ({ playlist }) => {
         type: "CHANGE_PLAYLIST_NAME",
         payload: { oldName: playlist.name, newName: playlistName }
       });
+      dispatch({ type: "SAVE_GLOBAL_STATE" });
     }
   };
 
@@ -67,7 +69,7 @@ const PlaylistCard = ({ playlist }) => {
               });
             }}
           >
-            <p>{`${playlist.name}${playlist.saved ? "" : "*"}`}</p>
+            <p>{playlist.name}</p>
           </div>
         </ContextMenuTrigger>
       )}

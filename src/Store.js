@@ -1,30 +1,20 @@
 import React from "react";
+import fileUtils from "./utils/file-util";
 
 export const Store = React.createContext();
-
-const initialState = {
-  playlists: [],
-  currentPlayingPlaylist: {
-    name: "",
-    tracks: [],
-    saved: false
-  },
-  currentViewingPlaylist: {
-    name: "",
-    tracks: [],
-    saved: false
-  },
-  currentTrackUrl: "",
-  nextTrackUrl: "",
-  isPlaying: false,
-  isPlaylistLooping: true,
-  isTrackLooping: false,
-  volume: 1
-};
 
 const StoreProvider = props => {
   const reducer = (state, action) => {
     switch (action.type) {
+      case "SAVE_GLOBAL_STATE":
+        fileUtils.saveToAppData({
+          playlists: state.playlists,
+          isPlaylistLooping: state.isPlaylistLooping,
+          isTrackLooping: state.isTrackLooping
+        });
+        return {
+          ...state
+        };
       case "TOGGLE_IS_PLAYING":
         return { ...state, isPlaying: action.payload };
       case "START_PLAYING":
@@ -52,8 +42,7 @@ const StoreProvider = props => {
             playlist.name === action.payload.oldName
               ? {
                   ...playlist,
-                  name: action.payload.newName,
-                  saved: false
+                  name: action.payload.newName
                 }
               : playlist
           ),
@@ -61,16 +50,14 @@ const StoreProvider = props => {
             state.currentViewingPlaylist.name === action.payload.oldName
               ? {
                   ...state.currentViewingPlaylist,
-                  name: action.payload.newName,
-                  saved: false
+                  name: action.payload.newName
                 }
               : state.currentViewingPlaylist,
           currentPlayingPlaylist:
             state.currentPlayingPlaylist.name === action.payload.oldName
               ? {
                   ...state.currentPlayingPlaylist,
-                  name: action.payload.newName,
-                  saved: false
+                  name: action.payload.newName
                 }
               : state.currentPlayingPlaylist
         };
@@ -78,8 +65,7 @@ const StoreProvider = props => {
       case "NEW_PLAYLIST":
         const newPlaylist = {
           name: `New playlist ${state.playlists.length + 1}`,
-          tracks: action.payload,
-          saved: false
+          tracks: action.payload
         };
 
         return {
@@ -102,16 +88,14 @@ const StoreProvider = props => {
             state.currentPlayingPlaylist.name === action.payload
               ? {
                   name: "",
-                  tracks: [],
-                  saved: false
+                  tracks: []
                 }
               : state.currentPlayingPlaylist,
           currentViewingPlaylist:
             state.currentViewingPlaylist.name === action.payload
               ? {
                   name: "",
-                  tracks: [],
-                  saved: false
+                  tracks: []
                 }
               : state.currentViewingPlaylist
         };
@@ -119,8 +103,7 @@ const StoreProvider = props => {
       case "LOAD_PLAYLIST":
         const loadedPlaylist = {
           name: action.payload.name,
-          tracks: [...action.payload.tracks],
-          saved: true
+          tracks: [...action.payload.tracks]
         };
 
         const loadedPlaylistName =
@@ -143,27 +126,21 @@ const StoreProvider = props => {
                   index === duplicatePlaylistIndex
                     ? {
                         name: loadedPlaylist.name,
-                        tracks: [...loadedPlaylist.tracks],
-                        saved: loadedPlaylist.saved
+                        tracks: [...loadedPlaylist.tracks]
                       }
                     : playlist
                 )
               : [...state.playlists, loadedPlaylist],
           currentViewingPlaylist: {
             name: loadedPlaylist.name,
-            tracks: [...loadedPlaylist.tracks],
-            saved: loadedPlaylist.saved
+            tracks: [...loadedPlaylist.tracks]
           },
           currentPlayingPlaylist: {
             name:
               state.currentPlayingPlaylist.name === loadedPlaylistName
                 ? loadedPlaylist.name
                 : state.currentPlayingPlaylist.name,
-            tracks: [...state.currentPlayingPlaylist.tracks],
-            saved:
-              state.currentPlayingPlaylist.name === loadedPlaylistName
-                ? true
-                : state.currentPlayingPlaylist.saved
+            tracks: [...state.currentPlayingPlaylist.tracks]
           }
         };
       case "ADD_TRACKS_TO_CURRENT_PLAYLIST":
@@ -173,22 +150,19 @@ const StoreProvider = props => {
             playlist.name === state.currentViewingPlaylist.name
               ? {
                   name: playlist.name,
-                  tracks: [...action.payload],
-                  saved: false
+                  tracks: [...action.payload]
                 }
               : playlist
           ),
           currentViewingPlaylist: {
             name: state.currentViewingPlaylist.name,
-            tracks: [...action.payload],
-            saved: false
+            tracks: [...action.payload]
           }
         };
       case "REORDER_CURRENT_PLAYLIST":
         const reorderCurrentPlaylist = {
           name: state.currentViewingPlaylist.name,
-          tracks: [...action.payload],
-          saved: false
+          tracks: [...action.payload]
         };
         return {
           ...state,
@@ -253,8 +227,7 @@ const StoreProvider = props => {
           name: state.currentViewingPlaylist.name,
           tracks: state.currentViewingPlaylist.tracks.filter(
             track => track.url !== action.payload
-          ),
-          saved: false
+          )
         };
 
         return {
@@ -279,7 +252,9 @@ const StoreProvider = props => {
     }
   };
 
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const loadedState = fileUtils.loadFromAppData();
+
+  const [state, dispatch] = React.useReducer(reducer, loadedState);
   const value = { state, dispatch };
 
   return <Store.Provider value={value}>{props.children}</Store.Provider>;

@@ -1,3 +1,5 @@
+import InitialState from "../InitialState";
+
 const { remote } = window.require("electron");
 var fs = window.require("fs");
 
@@ -73,6 +75,35 @@ const fileUtils = {
         });
       });
     return result ? result : [{ name: "", urls: [] }];
+  },
+  loadFromAppData() {
+    const appDataPath = `${remote.app.getPath("userData")}\\appData.json`;
+    try {
+      if (!fs.existsSync(appDataPath)) {
+        fs.writeFileSync(appDataPath, JSON.stringify(InitialState), "utf-8");
+      }
+      const loadedState = JSON.parse(fs.readFileSync(appDataPath));
+      return {
+        ...InitialState,
+        ...loadedState,
+        currentViewingPlaylist:
+          loadedState.playlists.length > 0
+            ? loadedState.playlists[0]
+            : InitialState.currentViewingPlaylist
+      };
+    } catch (err) {
+      console.error(err);
+    }
+    console.error("Couldn't load appData, loading backup: InitialState");
+    return InitialState;
+  },
+  async saveToAppData(state) {
+    const appDataPath = `${remote.app.getPath("userData")}\\appData.json`;
+    try {
+      fs.writeFileSync(appDataPath, JSON.stringify(state), "utf-8");
+    } catch (err) {
+      console.error(err);
+    }
   }
 };
 

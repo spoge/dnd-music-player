@@ -24,6 +24,7 @@ const PlaylistPage = () => {
       type: "ADD_TRACKS_TO_CURRENT_PLAYLIST",
       payload: tracks
     });
+    dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
   const dispatchNewPlaylist = tracks => {
@@ -31,6 +32,7 @@ const PlaylistPage = () => {
       type: "NEW_PLAYLIST",
       payload: tracks
     });
+    dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
   const dispatchLoadPlaylist = playlist => {
@@ -38,6 +40,7 @@ const PlaylistPage = () => {
       type: "LOAD_PLAYLIST",
       payload: playlist
     });
+    dispatch({ type: "SAVE_GLOBAL_STATE" });
   };
 
   const newPlaylistClick = async () => {
@@ -105,8 +108,7 @@ const PlaylistPage = () => {
         Promise.all(promises).then(tracks => {
           dispatchLoadPlaylist({
             name: newPlaylist.name,
-            tracks: tracks,
-            saved: true
+            tracks: tracks
           });
         });
       });

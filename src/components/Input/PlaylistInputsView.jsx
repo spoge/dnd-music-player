@@ -38,22 +38,24 @@ const PlaylistInputsView = ({
           label="Fade out"
         /> */}
         <InputCheckbox
-          onChange={() =>
+          onChange={() => {
             dispatch({
               type: "TOGGLE_LOOPING_PLAYLIST_ENABLED",
               payload: !state.isPlaylistLooping
-            })
-          }
+            });
+            dispatch({ type: "SAVE_GLOBAL_STATE" });
+          }}
           checked={state.isPlaylistLooping}
           label="Repeat playlist"
         />
         <InputCheckbox
-          onChange={() =>
+          onChange={() => {
             dispatch({
               type: "TOGGLE_LOOPING_TRACK_ENABLED",
               payload: !state.isTrackLooping
-            })
-          }
+            });
+            dispatch({ type: "SAVE_GLOBAL_STATE" });
+          }}
           checked={state.isTrackLooping}
           label="Repeat song"
         />

@@ -38,6 +38,7 @@ const TrackCard = ({ track }) => {
         <MenuItem
           onClick={() => {
             dispatch({ type: "DELETE_SELECTED_TRACK", payload: track.url });
+            dispatch({ type: "SAVE_GLOBAL_STATE" });
           }}
         >{`Delete "${track.title}"`}</MenuItem>
       </ContextMenu>
