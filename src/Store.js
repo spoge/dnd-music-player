@@ -157,7 +157,15 @@ const StoreProvider = props => {
           currentViewingPlaylist: {
             name: state.currentViewingPlaylist.name,
             tracks: [...action.payload]
-          }
+          },
+          currentPlayingPlaylist:
+            state.currentPlayingPlaylist.name ===
+            state.currentViewingPlaylist.name
+              ? {
+                  name: state.currentPlayingPlaylist.name,
+                  tracks: [...action.payload]
+                }
+              : state.currentPlayingPlaylist
         };
       case "REORDER_CURRENT_PLAYLIST":
         const reorderCurrentPlaylist = {

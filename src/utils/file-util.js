@@ -50,7 +50,7 @@ const fileUtils = {
       }
     });
   },
-  async loadPlaylists() {
+  async loadPlaylistsFromDialog() {
     const result = await remote.dialog
       .showOpenDialog({
         title: "Open Playlist",
@@ -83,6 +83,19 @@ const fileUtils = {
           .filter(result => result !== "");
       });
     return result ? result : [{ name: "", urls: [] }];
+  },
+  loadPlaylistsFromJson(filePaths) {
+    return filePaths
+      .map(filePath => {
+        try {
+          return JSON.parse(fs.readFileSync(filePath));
+        } catch (err) {
+          console.warn(err);
+        }
+        console.warn("Couldn't load playlist");
+        return "";
+      })
+      .filter(result => result !== "");
   },
   loadFromAppData() {
     const appDataPath = `${remote.app.getPath("userData")}\\appData.json`;
