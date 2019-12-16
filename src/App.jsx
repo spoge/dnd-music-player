@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.scss";
 
-import PlaylistPage from "./components/PlaylistPage";
+import ContextMenuPlaylist from "./components/ContextMenuPlaylist";
 
 function App() {
   return (
     <div className="App">
-      <PlaylistPage />
+      <ContextMenuPlaylist />
     </div>
   );
 }
