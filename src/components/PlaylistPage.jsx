@@ -5,7 +5,7 @@ import "./PlaylistPage.scss";
 import PlaylistInputsView from "./Input/PlaylistInputsView";
 import PlaylistMenuView from "./PlaylistMenu/PlaylistMenuView";
 import PlaylistContentView from "./PlaylistContent/PlaylistContentView";
-import PlaylistPlayer from "./PlaylistPlayer";
+import PlaylistPlayer from "./PlaylistPlayer/PlaylistPlayer";
 
 const PlaylistPage = () => {
   return (

@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 
-import "./PlaylistPage.scss";
 import fileUtils from "../utils/file-util";
 import { Store } from "../Store.js";
 
 import * as mm from "music-metadata-browser";
-import DroppableMenuPlaylist from "./DroppableMenuPlaylist";
+import DroppablePlaylistPage from "./DroppablePlaylistPage";
 
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
@@ -95,7 +94,7 @@ const ContextMenuPlaylist = () => {
   return (
     <div>
       <ContextMenuTrigger id="global-context-menu">
-        <DroppableMenuPlaylist
+        <DroppablePlaylistPage
           loadTracks={loadTracks}
           loadPlaylists={loadPlaylists}
         />

@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import ReactPlayer from "react-player";
 
-import "./PlaylistPage.scss";
-import { Store } from "../Store.js";
+import { Store } from "../../Store.js";
 
 const PlaylistPlayer = () => {
   const globalState = useContext(Store);

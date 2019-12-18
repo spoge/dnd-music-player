@@ -1,7 +1,6 @@
 import React from "react";
 import Dropzone from "react-dropzone";
 
-import "./PlaylistPage.scss";
 import fileUtils from "../utils/file-util";
 
 import PlaylistPage from "./PlaylistPage";
