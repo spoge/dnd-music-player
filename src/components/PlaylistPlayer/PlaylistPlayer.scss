@@ -1,0 +1,58 @@
+@import "../../App.scss";
+@import "../../styles/colors.scss";
+
+.playlist-player {
+  background-color: white;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .play-pause-button svg {
+    width: 23px;
+    height: 23px;
+    margin-left: 8px;
+    margin-bottom: 4px;
+    margin-top: 4px;
+  }
+
+  .time-slider-label {
+    align-self: center;
+    font-size: 15px;
+    margin-top: -2px;
+    white-space: nowrap;
+
+    // make text unselecteble
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+  }
+
+  .time-slider-wrapper {
+    padding-right: 2em;
+    padding-left: 1em;
+    width: 100%;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .volume-slider-wrapper {
+    padding-right: 0.5em;
+    padding-top: 0.2em;
+    width: 20vw;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    .volume-icon {
+      margin: auto;
+    }
+    .volume-slider {
+      padding: 0em 0.5em;
+      margin: auto;
+      width: 200px;
+    }
+  }
+}

@@ -10,15 +10,7 @@
 
   .playlist-wrapper {
     padding: 1em;
-    margin-bottom: 54px;
-  }
-
-  .player-wrapper {
-    height: 54px;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    background-color: $dark-blue;
+    margin-bottom: 71px; // height of playlist-player
   }
 
   .input-checkbox-wrapper {

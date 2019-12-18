@@ -5,7 +5,6 @@ import "./PlaylistPage.scss";
 import PlaylistInputsView from "./Input/PlaylistInputsView";
 import PlaylistMenuView from "./PlaylistMenu/PlaylistMenuView";
 import PlaylistContentView from "./PlaylistContent/PlaylistContentView";
-import PlaylistPlayer from "./PlaylistPlayer/PlaylistPlayer";
 
 const PlaylistPage = () => {
   return (
@@ -22,10 +21,6 @@ const PlaylistPage = () => {
         <div className="input-checkbox-wrapper">
           <PlaylistInputsView />
         </div>
-      </div>
-
-      <div className="player-wrapper">
-        <PlaylistPlayer />
       </div>
     </div>
   );
