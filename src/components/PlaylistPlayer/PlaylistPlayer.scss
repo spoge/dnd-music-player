@@ -16,6 +16,15 @@
     margin-top: 4px;
   }
 
+  .repeat-button {
+    padding-right: 0.5em;
+  }
+
+  .repeat-button svg {
+    width: 31px;
+    height: 31px;
+  }
+
   .time-slider-label {
     align-self: center;
     font-size: 15px;
@@ -30,7 +39,7 @@
   }
 
   .time-slider-wrapper {
-    padding-right: 2em;
+    padding-right: 0.5em;
     padding-left: 1em;
     width: 100%;
     margin: auto;

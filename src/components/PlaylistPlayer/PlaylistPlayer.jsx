@@ -8,6 +8,9 @@ import "./PlaylistPlayer.scss";
 import PlayIcon from "./PlayIcon";
 import PauseIcon from "./PauseIcon";
 
+import RepeatIcon from "@material-ui/icons/Repeat";
+import RepeatOneIcon from "@material-ui/icons/RepeatOne";
+
 import Slider from "@material-ui/core/Slider";
 
 import VolumeDown from "@material-ui/icons/VolumeDown";
@@ -16,14 +19,14 @@ import VolumeUp from "@material-ui/icons/VolumeUp";
 import { Store } from "../../Store.js";
 
 const PlaylistPlayer = () => {
+  const globalState = useContext(Store);
+  const { state, dispatch } = globalState;
+
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState();
   const [volume, setVolume] = useState(1);
 
   const player = useRef();
-
-  const globalState = useContext(Store);
-  const { state, dispatch } = globalState;
 
   const nextTrack = () => {
     setTime(0);
@@ -46,10 +49,19 @@ const PlaylistPlayer = () => {
     });
   };
 
+  const toggleRepeatState = () => {
+    dispatch({
+      type: "TOGGLE_REPEAT_STATE"
+    });
+    dispatch({
+      type: "SAVE_GLOBAL_STATE"
+    });
+  };
+
   const shouldLoopTrack = () => {
     return (
-      state.isTrackLooping ||
-      (state.isPlaylistLooping &&
+      state.repeatState === "track" ||
+      (state.repeatState === "playlist" &&
         state.currentPlayingPlaylist.tracks.length === 1)
     );
   };
@@ -106,6 +118,19 @@ const PlaylistPlayer = () => {
             }}
           />
         </div>
+
+        <div className="repeat-button">
+          <IconButton onClick={toggleRepeatState}>
+            {state.repeatState === "track" ? (
+              <RepeatOneIcon style={{ color: "#000000" }} />
+            ) : state.repeatState === "playlist" ? (
+              <RepeatIcon style={{ color: "#000000" }} />
+            ) : (
+              <RepeatIcon color="disabled" />
+            )}
+          </IconButton>
+        </div>
+
         <div className="volume-slider-wrapper">
           <div className="volume-icon">
             <VolumeDown />

@@ -9,8 +9,7 @@ const StoreProvider = props => {
       case "SAVE_GLOBAL_STATE":
         fileUtils.saveToAppData({
           playlists: state.playlists,
-          isPlaylistLooping: state.isPlaylistLooping,
-          isTrackLooping: state.isTrackLooping
+          repeatState: state.repeatState
         });
         return {
           ...state
@@ -21,10 +20,16 @@ const StoreProvider = props => {
         return { ...state, isPlaying: true };
       case "STOP_PLAYING":
         return { ...state, isPlaying: false };
-      case "TOGGLE_LOOPING_PLAYLIST_ENABLED":
-        return { ...state, isPlaylistLooping: action.payload };
-      case "TOGGLE_LOOPING_TRACK_ENABLED":
-        return { ...state, isTrackLooping: action.payload };
+      case "TOGGLE_REPEAT_STATE":
+        let nextRepeatState = "";
+        if (state.repeatState === "") {
+          nextRepeatState = "playlist";
+        } else if (state.repeatState === "playlist") {
+          nextRepeatState = "track";
+        } else {
+          nextRepeatState = "";
+        }
+        return { ...state, repeatState: nextRepeatState };
       case "VIEW_SELECTED_PLAYLIST":
         const selectedPlaylistIndex = state.playlists
           .map(playlist => playlist.name)
@@ -218,8 +223,8 @@ const StoreProvider = props => {
           else {
             nextUrl = state.currentPlayingPlaylist.tracks[0].url;
           }
-        } // last song, loop if isPlaylistLooping is set
-        else if (state.isPlaylistLooping) {
+        } // last song, loop if repeatState is set to playlist
+        else if (state.repeatState === "playlist") {
           nextUrl = state.currentPlayingPlaylist.tracks[0].url;
         } else {
           isPlaying = false;
