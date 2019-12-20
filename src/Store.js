@@ -9,17 +9,18 @@ const StoreProvider = props => {
       case "SAVE_GLOBAL_STATE":
         fileUtils.saveToAppData({
           playlists: state.playlists,
+          isShuffling: state.isShuffling,
           repeatState: state.repeatState
         });
         return {
           ...state
         };
-      case "TOGGLE_IS_PLAYING":
-        return { ...state, isPlaying: action.payload };
       case "START_PLAYING":
         return { ...state, isPlaying: true };
       case "STOP_PLAYING":
         return { ...state, isPlaying: false };
+      case "SET_IS_SHUFFLING":
+        return { ...state, isShuffling: action.payload };
       case "TOGGLE_REPEAT_STATE":
         let nextRepeatState = "";
         if (state.repeatState === "") {
@@ -204,25 +205,27 @@ const StoreProvider = props => {
           currentPlayingPlaylist: state.currentViewingPlaylist
         };
       case "NEXT_TRACK":
-        let nextIndex = state.currentPlayingPlaylist.tracks
+        let currentIndex = state.currentPlayingPlaylist.tracks
           .map(track => track.url)
           .indexOf(state.currentTrackUrl);
         let nextUrl = state.currentTrackUrl;
         let isPlaying = state.isPlaying;
 
-        // next song exists
-        if (nextIndex + 1 < state.currentPlayingPlaylist.tracks.length) {
-          // selected playlist contains current track
-          if (
-            state.currentPlayingPlaylist.tracks
-              .map(tracks => tracks.url)
-              .filter(url => state.currentTrackUrl === url).length > 0
-          ) {
-            nextUrl = state.currentPlayingPlaylist.tracks[nextIndex + 1].url;
-          } // selected playlist doesn't contain current track, i.e. viewing another playlist
-          else {
-            nextUrl = state.currentPlayingPlaylist.tracks[0].url;
-          }
+        // Shuffle only if shuffle is enabled, repeat-state is not for track, and is more than one track in playlist
+        if (state.isShuffling) {
+          const randomTracks = [...state.currentPlayingPlaylist.tracks];
+          randomTracks.splice(currentIndex, 1);
+          // Number between 0 and randomTracks.length (inclusive of 0, but not of length)
+          const randomIndex = Math.floor(
+            Math.random() * Math.floor(randomTracks.length)
+          );
+          nextUrl = randomTracks[randomIndex].url;
+        } // next song exists
+        else if (
+          currentIndex + 1 <
+          state.currentPlayingPlaylist.tracks.length
+        ) {
+          nextUrl = state.currentPlayingPlaylist.tracks[currentIndex + 1].url;
         } // last song, loop if repeatState is set to playlist
         else if (state.repeatState === "playlist") {
           nextUrl = state.currentPlayingPlaylist.tracks[0].url;

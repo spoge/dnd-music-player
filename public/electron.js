@@ -14,7 +14,7 @@ function createWindow() {
     height: 600,
     icon: "",
     minHeight: 300,
-    minWidth: 300,
+    minWidth: 400,
     webPreferences: { webSecurity: false, nodeIntegration: true }
   });
 

@@ -10,6 +10,7 @@ import PauseIcon from "./PauseIcon";
 
 import RepeatIcon from "@material-ui/icons/Repeat";
 import RepeatOneIcon from "@material-ui/icons/RepeatOne";
+import ShuffleIcon from "@material-ui/icons/Shuffle";
 
 import Slider from "@material-ui/core/Slider";
 
@@ -46,6 +47,13 @@ const PlaylistPlayer = () => {
   const stopPlaying = () => {
     dispatch({
       type: "STOP_PLAYING"
+    });
+  };
+
+  const toggleIsShuffling = () => {
+    dispatch({
+      type: "SET_IS_SHUFFLING",
+      payload: !state.isShuffling
     });
   };
 
@@ -117,6 +125,16 @@ const PlaylistPlayer = () => {
               }
             }}
           />
+        </div>
+
+        <div className="shuffle-button">
+          <IconButton onClick={toggleIsShuffling}>
+            {state.isShuffling ? (
+              <ShuffleIcon style={{ color: "#000000" }} />
+            ) : (
+              <ShuffleIcon color="disabled" />
+            )}
+          </IconButton>
         </div>
 
         <div className="repeat-button">

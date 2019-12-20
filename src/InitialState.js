@@ -11,6 +11,7 @@ export default {
   currentTrackUrl: "",
   nextTrackUrl: "",
   isPlaying: false,
+  isShuffling: false,
   repeatState: "", // "", "track", "playlist"
   volume: 1
 };
