@@ -45,7 +45,7 @@ const PlaylistContentView = () => {
         <div className="track-item"></div>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
+        <Droppable droppableId="droppable" type="TRACK">
           {dropProvided => (
             <div {...dropProvided.droppableProps} ref={dropProvided.innerRef}>
               {state.currentViewingPlaylist.tracks.map((track, index) => (

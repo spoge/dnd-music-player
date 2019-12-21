@@ -33,7 +33,7 @@ const PlaylistMenuView = () => {
         <h3>PLAYLIST</h3>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
+        <Droppable droppableId="droppable" type="PLAYLIST">
           {dropProvided => (
             <div {...dropProvided.droppableProps} ref={dropProvided.innerRef}>
               {state.playlists.map((playlist, index) => (
