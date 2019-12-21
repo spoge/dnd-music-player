@@ -13,5 +13,6 @@ export default {
   isPlaying: false,
   isShuffling: false,
   repeatState: "", // "", "track", "playlist"
-  volume: 1
+  volume: 1,
+  isSwitchingTracks: false
 };

@@ -159,7 +159,10 @@ const PlaylistPlayer = () => {
               min={0}
               max={1}
               step={0.01}
-              onChange={(event, newValue) => setVolume(newValue)}
+              onChange={(event, newValue) => {
+                setVolume(newValue);
+                dispatch({ type: "SET_VOLUME", payload: newValue });
+              }}
             />
           </div>
           <div className="volume-icon">
@@ -180,7 +183,7 @@ const PlaylistPlayer = () => {
         onEnded={nextTrack}
         playing={state.isPlaying}
         loop={shouldLoopTrack()}
-        volume={volume}
+        volume={state.volume}
         url={state.currentTrackUrl}
         onDuration={dur => {
           setDuration(dur);

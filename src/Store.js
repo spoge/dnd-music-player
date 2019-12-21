@@ -19,6 +19,8 @@ const StoreProvider = props => {
         return { ...state, isPlaying: true };
       case "STOP_PLAYING":
         return { ...state, isPlaying: false };
+      case "SET_IS_SWITCHING_TRACKS":
+        return { ...state, isSwitchingTracks: action.payload };
       case "SET_IS_SHUFFLING":
         return { ...state, isShuffling: action.payload };
       case "TOGGLE_REPEAT_STATE":
@@ -31,6 +33,9 @@ const StoreProvider = props => {
           nextRepeatState = "";
         }
         return { ...state, repeatState: nextRepeatState };
+      case "SET_VOLUME": {
+        return { ...state, volume: action.payload };
+      }
       case "VIEW_SELECTED_PLAYLIST":
         const selectedPlaylistIndex = state.playlists
           .map(playlist => playlist.name)
