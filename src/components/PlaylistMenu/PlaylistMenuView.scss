@@ -14,6 +14,15 @@
     overflow: auto;
     cursor: default;
 
+    display: flex;
+    align-items: center;
+
+    .playlist-header-icon,
+    .playlist-header-icon svg {
+      width: 36px;
+      height: 36px;
+    }
+
     h3 {
       margin: 0.1em 0.4em;
       white-space: nowrap;
