@@ -19,16 +19,16 @@ const PlaylistMenuView = () => {
   const sortPlaylist = () => {
     if (playlistSort === "") {
       setPlaylistSort("desc");
-      const playlists = state.playlists.sort((a, b) =>
-        a.name > b.name ? 1 : -1
-      );
-      dispatch({ type: "REORDER_PLAYLISTS", payload: playlists });
+      dispatch({
+        type: "REORDER_PLAYLISTS",
+        payload: listUtils.sort(state.playlists, "name")
+      });
     } else if (playlistSort === "desc") {
       setPlaylistSort("asc");
-      const playlists = state.playlists.sort((a, b) =>
-        a.name < b.name ? 1 : -1
-      );
-      dispatch({ type: "REORDER_PLAYLISTS", payload: playlists });
+      dispatch({
+        type: "REORDER_PLAYLISTS",
+        payload: listUtils.reverseSort(state.playlists, "name")
+      });
     } else {
       setPlaylistSort("");
     }
@@ -52,13 +52,13 @@ const PlaylistMenuView = () => {
   };
 
   const sortIcon = () => {
-    if (playlistSort === "asc") {
-      return <SortAscIcon />;
-    } else if (playlistSort === "desc") {
-      return <SortDescIcon />;
-    } else {
-      return "";
-    }
+    return playlistSort === "asc" ? (
+      <SortAscIcon />
+    ) : playlistSort === "desc" ? (
+      <SortDescIcon />
+    ) : (
+      ""
+    );
   };
 
   return (
