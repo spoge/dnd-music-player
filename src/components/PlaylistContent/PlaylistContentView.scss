@@ -11,6 +11,17 @@
     flex-direction: row;
     cursor: default;
 
+    .track-header-inner-wrapper {
+      display: flex;
+      align-items: center;
+
+      .sort-icon,
+      .sort-icon svg {
+        width: 36px;
+        height: 36px;
+      }
+    }
+
     p {
       // font-weight: bold;
       margin: 0.2em 0;
