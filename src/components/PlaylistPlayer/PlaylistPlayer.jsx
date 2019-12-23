@@ -5,9 +5,8 @@ import IconButton from "@material-ui/core/IconButton";
 
 import "./PlaylistPlayer.scss";
 
-import PlayIcon from "./PlayIcon";
-import PauseIcon from "./PauseIcon";
-
+import PlayIcon from "@material-ui/icons/PlayArrow";
+import PauseIcon from "@material-ui/icons/Pause";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import RepeatOneIcon from "@material-ui/icons/RepeatOne";
 import ShuffleIcon from "@material-ui/icons/Shuffle";
@@ -99,11 +98,11 @@ const PlaylistPlayer = () => {
         <div className="play-pause-button">
           {state.isPlaying ? (
             <IconButton onClick={stopPlaying}>
-              <PauseIcon />
+              <PauseIcon style={{ color: "#000000" }} />
             </IconButton>
           ) : (
             <IconButton onClick={startPlaying}>
-              <PlayIcon />
+              <PlayIcon style={{ color: "#000000" }} />
             </IconButton>
           )}
         </div>
