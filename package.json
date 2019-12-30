@@ -6,6 +6,9 @@
   "build": {
     "appId": "no.sboge.dnd-music-player",
     "productName": "D&D Music Player",
+    "mac": {
+      "icon": "build/icon.png"
+    },
     "win": {
       "icon": "build/icon.png"
     }
