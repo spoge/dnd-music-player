@@ -25,7 +25,7 @@ const ContextMenuPlaylist = () => {
         mm.fetchFromUrl(url).then(metadata => {
           return {
             url: url,
-            title: metadata.common.title,
+            title: metadata.common.title || fileUtils.getFileName(url),
             album: metadata.common.album,
             artist: metadata.common.artist
           };

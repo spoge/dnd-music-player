@@ -19,6 +19,14 @@ const fileUtils = {
     }
     return files.filePaths;
   },
+  getFileName(path) {
+    return path
+      .split("\\")
+      .pop()
+      .split("/")
+      .pop()
+      .split(".")[0];
+  },
   async savePlaylist(content) {
     let options = {
       title: "Save playlist",
@@ -103,13 +111,23 @@ const fileUtils = {
       if (!fs.existsSync(appDataPath)) {
         fs.writeFileSync(appDataPath, JSON.stringify(InitialState), "utf-8");
       }
-      const loadedState = JSON.parse(fs.readFileSync(appDataPath));
+      const initialLoadedState = JSON.parse(fs.readFileSync(appDataPath));
+      const confirmedLoadedState = {
+        ...initialLoadedState,
+        playlists: initialLoadedState.playlists.map(playlist => {
+          return {
+            ...playlist,
+            tracks: playlist.tracks.filter(track => fs.existsSync(track.url))
+          };
+        })
+      };
+
       return {
         ...InitialState,
-        ...loadedState,
+        ...confirmedLoadedState,
         currentViewingPlaylist:
-          loadedState.playlists.length > 0
-            ? loadedState.playlists[0]
+          confirmedLoadedState.playlists.length > 0
+            ? confirmedLoadedState.playlists[0]
             : InitialState.currentViewingPlaylist
       };
     } catch (err) {
