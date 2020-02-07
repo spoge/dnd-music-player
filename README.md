@@ -1,5 +1,11 @@
 # D&D Music Player (WIP)
 
+![Image of Music Player App](./docs/main.png)
+
+How does it work? Drag and drop mp3 files into the app then use it like so:
+
+![Gif of Music Player App](./docs/showcase.gif)
+
 This project was bootstrapped with [React Electron](https://github.com/willjw3/react-electron) by [willjw3](https://github.com/willjw3).
 
 ## Easy install
