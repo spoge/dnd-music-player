@@ -1,4 +1,4 @@
-# D&D Music Player (WIP)
+# D&D Music Player
 
 ![Image of Music Player App](./docs/main.png)
 
