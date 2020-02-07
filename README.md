@@ -12,8 +12,7 @@ This project was bootstrapped with [React Electron](https://github.com/willjw3/r
 
 If you just want to use the music-player, please only follow the steps in this section.
 
-0. Wait for a `release`
-1. Go to the `releases` page
+1. Go to the [releases](https://github.com/spoge/dnd-music-player/releases) page
 2. Download newest version & Install
 
 #
