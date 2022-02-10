@@ -22,7 +22,7 @@
     "cross-env": "^6.0.3",
     "electron-is-dev": "^1.1.0",
     "music-metadata-browser": "^1.8.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "react": "^16.11.0",
     "react-beautiful-dnd": "^12.2.0",
     "react-contextmenu": "^2.13.0",
